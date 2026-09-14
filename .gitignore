@@ -1,0 +1,10 @@
+# project stuff
+.env
+.env.prod
+
+# application stuff
+/vendor/
+
+/node_modules/
+/package-lock.json
+/.phpunit.result.cache
