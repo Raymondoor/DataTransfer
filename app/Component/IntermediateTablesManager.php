@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace DataTransfer\Component;
 use DataTransfer\Model\IntermediateTableConfiguration;
-class IntermediateTablesList{
+class IntermediateTablesManager{
     /**
      * @var IntermediateTableConfiguration[]
      */
