@@ -1,14 +1,36 @@
 <?php declare(strict_types=1);
 namespace DataTransfer\Operation;
-use DataTransfer\Base\OperationInterface;
-class RenameOperation implements OperationInterface{
-    public string $query;
+use DataTransfer\Exception\DataTransferException;
+class RenameOperation extends Operation{
+    public array $modifications;
     /**
-     * list of columns to rename
-     * @param string[] $columns
+     * list of columns to rename `[oldName => newName]`
+     * @param string[] $modifications
      * @return self
      */
-    public function rename(array $columns):self{
+    public function rename(array $modifications):self{
+        $this->modifications = $modifications;
+        $this->setTableConfiguration($this->id,$this->validateThenGenerateColumns());
         return $this;
+    }
+    public static function from(Operation $previousOperation):self{
+        $o = new self();
+        $o->id = OperationManager::generateId();
+        $o->previousOperation = $previousOperation;
+        return $o;
+    }
+    public function validateThenGenerateColumns():array{
+        $columns = $this->previousOperation->tableConfig->columns;
+        foreach($this->modifications as $oldName => $newName){
+            if(!in_array($oldName, $columns)){
+                throw new DataTransferException("Column $oldName does not exist in the original columns");
+            }
+            if(in_array($newName, $columns)){
+                throw new DataTransferException("Column $newName already exists in the original columns");
+            }
+            $index = array_search($oldName, $columns);
+            $columns[$index] = $newName;
+        }
+        return $columns;
     }
 }

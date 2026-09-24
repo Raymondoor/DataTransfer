@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Component;
+namespace DataTransfer\Exception;
 class DataTransferException extends \Exception{
 	
 }

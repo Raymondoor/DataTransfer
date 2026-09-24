@@ -1,12 +1,9 @@
 <?php declare(strict_types=1);
 namespace DataTransfer\Operation;
-class DistinctOperation extends Operation{
-    public string $column;
-    /**
-     * distinct column of choise. can only be one column
-     */
-    public function distinct(string $column):self{
-        $this->column = $column;
+class AddColumnsOperation extends Operation{
+    public array $columns = [];
+    public function add(array $columns):self{
+        $this->columns = $columns;
         $this->setTableConfiguration($this->id,$this->validateThenGenerateColumns());
         return $this;
     }
@@ -18,9 +15,11 @@ class DistinctOperation extends Operation{
     }
     public function validateThenGenerateColumns():array{
         $columns = $this->previousOperation->tableConfig->columns;
-        if(self::columnExists($columns, [$this->column]) === false){
-            throw new \DataTransfer\Exception\DataTransferException("Column '$this->column' does not exist in the table.");
+        $existingColumn = self::columnExists($this->columns, $columns); 
+        if($existingColumn !== false){
+            throw new \DataTransfer\Exception\DataTransferException("Column '$existingColumn' already exists in the table.");
         }
-        return [$this->column];
+        array_push($columns, ...$this->columns);
+        return $columns;
     }
 }

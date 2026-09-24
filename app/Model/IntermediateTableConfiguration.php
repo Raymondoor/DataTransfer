@@ -1,7 +1,6 @@
 <?php declare(strict_types=1);
 namespace DataTransfer\Model;
 
-use DataTransfer\Base\OperationInterface;
 use DataTransfer\Component\IntermediateTableCreator;
 /**
  * This manages the intermediate tables in sql, not the configuration itself, so it won't have relations
@@ -16,5 +15,7 @@ class IntermediateTableConfiguration{
     public function __construct(string $tablename, array $columns){
         $this->tablename = $tablename;
         $this->columns = $columns;
+        $this->creator = new IntermediateTableCreator($this);
+        $this->creator->parse();
     }
 }
