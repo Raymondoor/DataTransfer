@@ -35,4 +35,12 @@ class CaptureOperation extends Operation{
     public function validateThenGenerateColumns():array{
         return $this->tableColumns;
     }
+    public function selectQueryFromPrevious(?Operation $previous):string{
+        return 'SELECT * FROM `'.$this->table.'`';
+    }
+    public function transform(iterable $data):iterable{
+        foreach($data as $row){
+            yield $row;
+        }
+    }
 }

@@ -25,4 +25,12 @@ class ExtractOperation extends Operation{
         }
         return $this->columns;
     }
+    public function selectQueryFromPrevious(Operation $previous):string{
+        return 'SELECT '.implode(', ',$this->tableConfig->columns).' FROM `'.$previous->tableConfig->tablename.'`';
+    }
+    public function transform(iterable $data):iterable{
+        foreach($data as $row){
+            yield $row;
+        }
+    }
 }

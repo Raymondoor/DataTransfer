@@ -29,4 +29,9 @@ class SettleOperation extends Operation{
         }
         return $this->tableColumns;
     }
+    public function transform(iterable $data):iterable{
+        foreach($data as $row){
+            yield $row;
+        }
+    }
 }

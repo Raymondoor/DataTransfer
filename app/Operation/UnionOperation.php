@@ -26,4 +26,13 @@ class UnionOperation extends Operation{
         }
         return $this->previousOperation->tableConfig->columns;
     }
+    public function selectQueryFromPrevious(Operation $previous):string{
+        // @todo implement union
+        return 'SELECT * FROM '.$previous->tableConfig->tablename;
+    }
+    public function transform(iterable $data):iterable{
+        foreach($data as $row){
+            yield $row;
+        }
+    }
 }

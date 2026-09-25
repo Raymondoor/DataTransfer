@@ -22,4 +22,12 @@ class AddColumnsOperation extends Operation{
         array_push($columns, ...$this->columns);
         return $columns;
     }
+    public function transform(iterable $data):iterable{
+        foreach($data as $row){
+            foreach($this->columns as $column){
+                $row[$column] = null;
+            }
+            yield $row;
+        }
+    }
 }

@@ -41,8 +41,18 @@ class JoinOperation extends Operation{
     }
     public function validateThenGenerateColumns():array{
         // @todo implement
+        // select cols from previous and joint operation, find join, etc
         $columns = $this->previousOperation->tableConfig->columns;
 
         return $columns;
+    }
+    public function selectQueryFromPrevious(Operation $previous):string{
+        // @todo implement
+        return 'SELECT * FROM '.$this->previousOperation->tableConfig->tablename;
+    }
+    public function transform(iterable $data):iterable{
+        // @todo implement
+        // just select and send back directly. new cols should be null anyways
+        yield [];
     }
 }

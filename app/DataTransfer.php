@@ -6,12 +6,13 @@ use DataTransfer\Database\OprDB;
 use DataTransfer\Database\TrgtDB;
 use DataTransfer\Exception\DataTransferException;
 use DataTransfer\Operation\OperationManager;
+use DataTransfer\Operation\SettleOperation;
 class DataTransfer{
     public static bool $isSrcDBSet = false;
     public static bool $isOprDBSet = false;
     public static bool $isTrgtDBSet = false;
     public static function boot(array $config = []):void{
-        
+        // do we need this?
     }
     public static function setSrcDB(string $driver, string $host, string $name = '', string $user = '', string $pass = '', array $options = []):void{
         SrcDB::$driver = $driver;
@@ -60,13 +61,24 @@ class DataTransfer{
     public static function test():bool{
         foreach(OperationManager::$operationList as $operation){
             var_dump($operation->tableConfig->creator->query);
+            var_dump($operation->selectQueryFromPrevious($operation->previousOperation));
         }
         return true;
     }
     public static function createTables():bool{
+        foreach(OperationManager::$operationList as $operation){
+            if($operation instanceof SettleOperation){
+
+            }else{
+                OprDB::exec($operation->tableConfig->creator->query);
+            }
+        }
         return true;
     }
     public static function execute():bool{
+        foreach(OperationManager::$operationList as $operation){
+            // if instance of capture, use SrcDB, if instance of Settle, use TrgtDB
+        }
         return true;
     }
 }

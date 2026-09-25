@@ -23,4 +23,12 @@ class DistinctOperation extends Operation{
         }
         return [$this->column];
     }
+    public function selectQueryFromPrevious(Operation $previous):string{
+        return 'SELECT DISTINCT `'.$this->column.'` FROM `'.$previous->tableConfig->tablename.'`';
+    }
+    public function transform(iterable $data):iterable{
+        foreach($data as $row){
+            yield $row;
+        }
+    }
 }
