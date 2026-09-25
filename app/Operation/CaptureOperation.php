@@ -35,7 +35,7 @@ class CaptureOperation extends Operation{
     public function validateThenGenerateColumns():array{
         return $this->tableColumns;
     }
-    public function selectQueryFromPrevious(?Operation $previous):string{
+    public function selectQueryFromPrevious():string{
         return 'SELECT * FROM `'.$this->table.'`';
     }
     public function transform(iterable $data):iterable{

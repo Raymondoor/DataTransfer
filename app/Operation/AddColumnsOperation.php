@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 namespace DataTransfer\Operation;
+/**
+ * Add new columns to schema, the values inside will default to null
+ */
 class AddColumnsOperation extends Operation{
     public array $columns = [];
     public function add(array $columns):self{

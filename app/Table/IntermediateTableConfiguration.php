@@ -1,7 +1,5 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Model;
-
-use DataTransfer\Component\IntermediateTableCreator;
+namespace DataTransfer\Table;
 /**
  * This manages the intermediate tables in sql, not the configuration itself, so it won't have relations
  */

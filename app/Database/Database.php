@@ -17,7 +17,20 @@ abstract class Database{
 		\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
 		\PDO::ATTR_TIMEOUT => 10
 	];
-	abstract public static function connect():void;
+	public static function connect():void{
+		if(static::$driver === 'sqlite'){
+			$dsn = "sqlite:".static::$host;
+		}else{
+			$dsn = static::$driver.':host='.static::$host.';dbname='.static::$name;
+		}
+		static::$connection = new \PDO($dsn,static::$user,static::$pass,static::$options);
+		// if(static::$driver === 'sqlite'){
+		// 	//
+		// }
+		// elseif(static::$driver === 'mysql'){
+		// 	static::$connection->setAttribute(\Pdo\Mysql::ATTR_FOUND_ROWS,true);
+		// }// ...
+	}
 	public static function getConnection():\PDO{
 		if(!isset(static::$connection)){
 			static::connect();
@@ -36,7 +49,7 @@ abstract class Database{
 	/**
 	 * Returns result of `PDO::exec()`.
 	 */
-	public static function exec(string $query):int{
+	public static function exec(string $query):int|bool{
 		return static::getConnection()->exec($query);
 	}
 	/**
@@ -75,7 +88,7 @@ abstract class Database{
 		$cols = match(static::$driver){
 			'sqlite' => static::sanitizeSelectColumnsSqlite($table),
 			'pgsql' => static::sanitizeSelectColumnsPgsql($table),
-			// 'mysql' => static::select("select * from pragma_table_info('".$table."') as columns"),
+			'mysql' => static::sanitizeSelectColumnsMysql($table),
 			default => throw new DataTransferException('wrong driver?')
 		};
 		return $cols;
@@ -89,6 +102,15 @@ abstract class Database{
 		return $sanitized;
 	}
 	public static function sanitizeSelectColumnsPgsql(string $table):array{
+		// @todo not implemented yet
+		$raw = static::select("select column_name as columns from information_schema.columns where table_name = '".$table."'");
+		$sanitized = [];
+		foreach($raw as $column){
+			$sanitized[] = $column['name'];
+		}
+		return $sanitized;
+	}
+	public static function sanitizeSelectColumnsMysql(string $table):array{
 		// @todo not implemented yet
 		$raw = static::select("select column_name as columns from information_schema.columns where table_name = '".$table."'");
 		$sanitized = [];

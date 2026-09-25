@@ -46,7 +46,7 @@ class JoinOperation extends Operation{
 
         return $columns;
     }
-    public function selectQueryFromPrevious(Operation $previous):string{
+    public function selectQueryFromPrevious():string{
         // @todo implement
         return 'SELECT * FROM '.$this->previousOperation->tableConfig->tablename;
     }

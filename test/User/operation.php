@@ -21,4 +21,4 @@ $opr2 = $opr::register(RenameOperation::from($opr0)->rename(['name' => 'username
 // $opr4 = $opr::register(SettleOperation::from($opr3)->settle('new_table'));
 
 DataTransfer::test();
-// DataTransfer::createTables();
+DataTransfer::createTables();

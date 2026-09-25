@@ -15,18 +15,4 @@ class SrcDB extends Database{
 		\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
 		\PDO::ATTR_TIMEOUT => 10
 	];
-	public static function connect():void{
-		if(self::$driver === 'sqlite'){
-			$dsn = "sqlite:".self::$host;
-		}else{
-			$dsn = self::$driver.':host='.self::$host.';dbname='.self::$name;
-		}
-		self::$connection = new \PDO($dsn,self::$user,self::$pass,self::$options);
-		// if(self::$driver === 'sqlite'){
-		// 	//
-		// }
-		// elseif(self::$driver === 'mysql'){
-		// 	self::$connection->setAttribute(\Pdo\Mysql::ATTR_FOUND_ROWS,true);
-		// }// ...
-	}
 }

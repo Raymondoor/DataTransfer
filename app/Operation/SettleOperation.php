@@ -6,7 +6,6 @@ use DataTransfer\Exception\DataTransferException;
  * Magic operation to treat target DB insert as a settlement operation. This operation will not generate any new columns, but will validate the existing columns and ensure that the data is settled correctly.
  */
 class SettleOperation extends Operation{
-    public Operation $previousOperation;
     public string $table;
     public array $tableColumns;
     public function settle(string $table):self{

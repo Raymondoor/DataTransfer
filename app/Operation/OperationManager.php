@@ -11,7 +11,7 @@ class OperationManager{
     }
     public static function generateId():string{
         // internal counter is int but generate with string zero padding for better readability
-        return str_pad((string)self::incrementIdCounter(), 4, '0', STR_PAD_LEFT);
+        return 'opr_'.str_pad((string)self::incrementIdCounter(), 4, '0', STR_PAD_LEFT);
     }
     private static function incrementIdCounter():int{
         return ++self::$idCounter;

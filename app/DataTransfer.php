@@ -60,17 +60,30 @@ class DataTransfer{
     }
     public static function test():bool{
         foreach(OperationManager::$operationList as $operation){
-            var_dump($operation->tableConfig->creator->query);
-            var_dump($operation->selectQueryFromPrevious($operation->previousOperation));
+            if($operation instanceof SettleOperation){
+                var_dump('No new schema on operation: '.$operation->id);
+                // var_dump($operation->selectQueryFromPrevious());
+            }else{
+                var_dump($operation->tableConfig->creator->query);
+                // var_dump($operation->selectQueryFromPrevious());
+            }
         }
         return true;
     }
-    public static function createTables():bool{
+    /**
+     * Create all intermediate tables registered in operation. Is created in database set in `DataTransfer::setOperationalDB()`.
+     * @param bool $reset `true` deletes all existing tables inside operational DB. Useful when re-running many times to test the configuration.
+     */
+    public static function createTables(bool $reset = false):bool{
         foreach(OperationManager::$operationList as $operation){
             if($operation instanceof SettleOperation){
 
             }else{
-                OprDB::exec($operation->tableConfig->creator->query);
+                if($reset){
+                    // delete all tables
+                    OprDB::dropAllTables();
+                }
+                $operation->tableConfig->creator->create();
             }
         }
         return true;
