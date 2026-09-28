@@ -50,5 +50,7 @@ $settleGroup = $opr::register(SettleOperation::from($groupsFinal)->settle('group
 $settleUser = $opr::register(SettleOperation::from($usersFinal)->settle('users')); // settle after groups to respect fereign key constraints
 
 var_dump(DataTransfer::analyze()); // array of operations' query
-DataTransfer::createTables(true);
+DataTransfer::createTables(true); // creates intermediate tables. does not touch actual data yet.
+DataTransfer::transfer(); // execute the transfer apart from settling to new DB
+DataTransfer::settle(); // finalize the transfer and insert to the new DB.
 ```
