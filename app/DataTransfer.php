@@ -65,6 +65,7 @@ class DataTransfer{
     }
     /**
      * Checks config validity and returns all schema that will be ran.
+     * @todo implement warning feat on src & target column if not used.
      * @return ?array
      */
     public static function analyze():?array{
@@ -136,6 +137,7 @@ class DataTransfer{
     }
     /**
      * Finalize the transfer and insert to the new DB. Cannot run if there is no prior operation/transfer.
+     * @todo implement warning if data already exists in target
      */
     public static function settle():bool{
         foreach(OperationManager::$operationList as $operation){
