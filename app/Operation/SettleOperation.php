@@ -32,6 +32,7 @@ class SettleOperation extends Operation{
     public function validateThenGenerateColumns():array{
         $columns = $this->previousOperation->tableConfig->columns;
         $this->setColumnsFromTable();
+        // @todo it does not properly check columns here. exact match but not for order is needed here.
         if(!self::columnExists($this->tableColumns,$columns)){
             throw new DataTransferException("Cannot settle to target table, column names seems to not match.");
         }

@@ -5,14 +5,19 @@ use DataTransfer\Database\SrcDB;
 use DataTransfer\Database\OprDB;
 use DataTransfer\Database\TrgtDB;
 use DataTransfer\Exception\DataTransferException;
+use DataTransfer\Operation\CaptureOperation;
 use DataTransfer\Operation\OperationManager;
 use DataTransfer\Operation\SettleOperation;
+use DataTransfer\Util\DBParamFormatter;
 class DataTransfer{
+    public static array $config = [
+        'cli' => true,
+    ];
     public static bool $isSrcDBSet = false;
     public static bool $isOprDBSet = false;
     public static bool $isTrgtDBSet = false;
     public static function boot(array $config = []):void{
-        // do we need this?
+        self::$config = array_merge(self::$config, $config);
     }
     public static function setSourceDB(string $driver, string $host, string $name = '', string $user = '', string $pass = '', array $options = []):void{
         SrcDB::$driver = $driver;
@@ -101,14 +106,56 @@ class DataTransfer{
     }
     /**
      * Execute the transfer apart from settling to new DB
-     * @todo not implemented yet
      */
-    public static function transfer():bool{return true;}
+    public static function transfer():bool{
+        self::createTables();
+        foreach(OperationManager::$operationList as $operation){
+            if(self::$config['cli']){
+                echo 'Operation: '.$operation->id.' started... ';
+            }
+            if($operation instanceof SettleOperation){
+                if(self::$config['cli']){
+                    echo 'skipped for later.'.PHP_EOL;
+                }
+            }else{
+                if($operation instanceof CaptureOperation){
+                    $data = SrcDB::selectUnbuffered($operation->selectQueryFromPrevious());
+                }else{
+                    $data = OprDB::selectUnbuffered($operation->selectQueryFromPrevious());
+                }
+                $newData = $operation->transform($data);
+                foreach($newData as $newRecord){
+                    OprDB::run($operation->tableConfig->inserter->query, DBParamFormatter::appendColon($newRecord));
+                }
+                if(self::$config['cli']){
+                    echo 'completed.'.PHP_EOL;
+                }
+            }
+        }
+        return true;
+    }
     /**
      * Finalize the transfer and insert to the new DB. Cannot run if there is no prior operation/transfer.
-     * @todo not implemented yet
      */
-    public static function settle():bool{return true;}
+    public static function settle():bool{
+        foreach(OperationManager::$operationList as $operation){
+            if($operation instanceof SettleOperation){
+                if(self::$config['cli']){
+                    echo 'Operation: '.$operation->id.' started... ';
+                }
+                $data = OprDB::selectUnbuffered($operation->selectQueryFromPrevious());
+                $newData = $operation->transform($data);
+                foreach($newData as $newRecord){
+                    TrgtDB::run($operation->tableConfig->inserter->query, DBParamFormatter::appendColon($newRecord));
+                }
+                if(self::$config['cli']){
+                    echo 'transfer completed.'.PHP_EOL;
+                }
+            }
+            
+        }
+        return true;
+    }
     /**
      * Transfer and settle to new DB
      * @todo not implemented yet

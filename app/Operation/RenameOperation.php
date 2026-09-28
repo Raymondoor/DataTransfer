@@ -32,6 +32,18 @@ class RenameOperation extends Operation{
         }
         return $columns;
     }
+    public function selectQueryFromPrevious():string{
+        $previous = $this->previousOperation->tableConfig->columns;
+        $selects = [];
+        foreach($previous as $column){
+            if(array_key_exists($column, $this->modifications)){
+                $selects[] = '`'.$column.'` AS `'.$this->modifications[$column].'`';
+            }else{
+                $selects[] = '`'.$column.'`';
+            }
+        }
+        return 'SELECT '.implode(',', $selects).' FROM `'.$this->previousOperation->tableConfig->tablename.'`';
+    }
     public function transform(iterable $data):iterable{
         foreach($data as $row){
             // @todo implement. either in sql using 'AS' or here.

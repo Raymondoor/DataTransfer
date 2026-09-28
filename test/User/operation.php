@@ -8,6 +8,7 @@ use DataTransfer\Operation\CaptureOperation;
 use DataTransfer\Operation\SettleOperation;
 
 DataTransfer::boot();
+// rename DB first
 DataTransfer::setSourceDB('sqlite', __DIR__.'/databaseS.db');
 DataTransfer::setOperationalDB('sqlite', __DIR__.'/databaseO.db');
 DataTransfer::setTargetDB('sqlite', __DIR__.'/databaseT.db');
