@@ -7,11 +7,11 @@ abstract class Operation{
     public IntermediateTableConfiguration $tableConfig;
     /**
      * Creates a new table configuration and sets to `$this->tableConfig`
-     * @param string $tablename new table name. usually inherited from `$this->id`
-     * @param array $columns new columns
      */
-    public function setTableConfiguration(string $tablename, array $columns):void{
-        $this->tableConfig = new IntermediateTableConfiguration($tablename, $columns);
+    public function setTableConfiguration():void{
+        $this->tableConfig = new IntermediateTableConfiguration($this->id, $this->validateThenGenerateColumns());
+        $this->tableConfig->setCreate();
+        $this->tableConfig->setInsert();
     }
     /**
      * As it says, validates if the relation is correct or not based on the original columns, then returns the newly generated columns list

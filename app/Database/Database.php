@@ -85,13 +85,12 @@ abstract class Database{
 		return static::getConnection()->rollBack();
 	}
 	public static function selectColumns(string $table):array{
-		$cols = match(static::$driver){
+		return match(static::$driver){
 			'sqlite' => static::sanitizeSelectColumnsSqlite($table),
 			'pgsql' => static::sanitizeSelectColumnsPgsql($table),
 			'mysql' => static::sanitizeSelectColumnsMysql($table),
 			default => throw new DataTransferException('wrong driver?')
 		};
-		return $cols;
 	}
 	public static function sanitizeSelectColumnsSqlite(string $table):array{
 		$raw = static::select("select name from pragma_table_info('".$table."')");
@@ -118,5 +117,33 @@ abstract class Database{
 			$sanitized[] = $column['name'];
 		}
 		return $sanitized;
+	}
+	/**
+	 * @todo not implemented yet
+	 * @return array
+	 */
+	public static function selectAllTables():array{
+		return match(static::$driver){
+			'sqlite' => static::sanitizeSelectTablesSqlite(),
+			'pgsql' => static::sanitizeSelectTablesPgsql(),
+			'mysql' => static::sanitizeSelectTablessMysql(),
+			default => throw new DataTransferException('wrong driver?')
+		};
+	}
+	public static function sanitizeSelectTablesSqlite():array{
+		$raw = static::select("SELECT name FROM sqlite_schema WHERE type='table'");
+		$sanitized = [];
+		foreach($raw as $table){
+			$sanitized[] = $table['name'];
+		}
+		return $sanitized;
+	}
+	public static function sanitizeSelectTablesPgsql():array{
+		// @todo not implemented yet
+		return [];
+	}
+	public static function sanitizeSelectTablessMysql():array{
+		// @todo not implemented yet
+		return [];
 	}
 }

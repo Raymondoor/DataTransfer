@@ -10,10 +10,17 @@ class IntermediateTableConfiguration{
     public string $tablename;
     public array $columns;
     public IntermediateTableCreator $creator;
+    public IntermediateTableInserter $inserter;
     public function __construct(string $tablename, array $columns){
         $this->tablename = $tablename;
         $this->columns = $columns;
+    }
+    public function setCreate():void{
         $this->creator = new IntermediateTableCreator($this);
-        $this->creator->parse();
+        $this->creator->createQuery();
+    }
+    public function setInsert():void{
+        $this->inserter = new IntermediateTableInserter($this);
+        $this->inserter->createQuery();
     }
 }

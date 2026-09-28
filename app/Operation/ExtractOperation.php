@@ -7,7 +7,6 @@ class ExtractOperation extends Operation{
      */
     public function extract(array|string $columns):self{
         $this->columns = is_string($columns) ? [$columns] : $columns;
-        $this->setTableConfiguration($this->id,$this->validateThenGenerateColumns());
         return $this;
     }
     public static function from(Operation $previousOperation):self{

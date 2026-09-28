@@ -7,7 +7,6 @@ class DistinctOperation extends Operation{
      */
     public function distinct(string $column):self{
         $this->column = $column;
-        $this->setTableConfiguration($this->id,$this->validateThenGenerateColumns());
         return $this;
     }
     public static function from(Operation $previousOperation):self{

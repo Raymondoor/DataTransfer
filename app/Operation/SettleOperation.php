@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace DataTransfer\Operation;
 use DataTransfer\Database\TrgtDB;
+use DataTransfer\Table\IntermediateTableConfiguration;
 use DataTransfer\Exception\DataTransferException;
 /**
  * Magic operation to treat target DB insert as a settlement operation. This operation will not generate any new columns, but will validate the existing columns and ensure that the data is settled correctly.
@@ -8,6 +9,13 @@ use DataTransfer\Exception\DataTransferException;
 class SettleOperation extends Operation{
     public string $table;
     public array $tableColumns;
+    /**
+     * Creates a new table configuration and sets to `$this->tableConfig`
+     */
+    public function setTableConfiguration():void{
+        $this->tableConfig = new IntermediateTableConfiguration($this->table, $this->validateThenGenerateColumns());
+        $this->tableConfig->setInsert();
+    }
     public function settle(string $table):self{
         $this->table = $table;
         return $this;
@@ -18,11 +26,12 @@ class SettleOperation extends Operation{
         $o->previousOperation = $previousOperation;
         return $o;
     }
-    public function getColumnsFromTable():void{
+    public function setColumnsFromTable():void{
         $this->tableColumns = TrgtDB::selectColumns($this->table);
     }
     public function validateThenGenerateColumns():array{
         $columns = $this->previousOperation->tableConfig->columns;
+        $this->setColumnsFromTable();
         if(!self::columnExists($this->tableColumns,$columns)){
             throw new DataTransferException("Cannot settle to target table, column names seems to not match.");
         }

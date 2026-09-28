@@ -17,7 +17,6 @@ class CaptureOperation extends Operation{
         $o->id = OperationManager::generateId();
         $o->capture($tablename);
         $o->tableColumns = SrcDB::selectColumns($o->table);
-        $o->setTableConfiguration($o->id,$o->validateThenGenerateColumns());
         return $o;
     }
     public static function fromColumns(string $tablename, array $columns):self{
@@ -25,7 +24,6 @@ class CaptureOperation extends Operation{
         $o->id = OperationManager::generateId();
         $o->capture($tablename);
         $o->tableColumns = $columns;
-        $o->setTableConfiguration($o->id,$o->validateThenGenerateColumns());
         return $o;
     }
     public function getColumnsFromTable():void{

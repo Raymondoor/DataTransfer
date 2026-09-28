@@ -1,5 +1,8 @@
 <?php declare(strict_types=1);
 namespace DataTransfer\Operation;
+
+use ReflectionProperty;
+
 class OperationManager{
     /**
      * @var Operation[]
@@ -22,5 +25,12 @@ class OperationManager{
     public static function register(Operation $operation):Operation{
         self::$operationList[] = $operation;
         return $operation;
+    }
+    public static function setAllTableConfiguration():void{
+        foreach(self::$operationList as $op){
+            $rp = new ReflectionProperty($op::class, 'tableConfig');
+            if(!$rp->isInitialized($op))
+            $op->setTableConfiguration();
+        }
     }
 }

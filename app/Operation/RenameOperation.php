@@ -10,7 +10,6 @@ class RenameOperation extends Operation{
      */
     public function rename(array $modifications):self{
         $this->modifications = $modifications;
-        $this->setTableConfiguration($this->id,$this->validateThenGenerateColumns());
         return $this;
     }
     public static function from(Operation $previousOperation):self{

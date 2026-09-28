@@ -6,7 +6,6 @@ class UnionOperation extends Operation{
     public Operation $unionOperation;
     public function union(Operation $unionOperation):self{
         $this->unionOperation = $unionOperation;
-        $this->setTableConfiguration($this->id, $this->validateThenGenerateColumns());
         return $this;
     }
     public static function from(Operation $previousOperation):self{

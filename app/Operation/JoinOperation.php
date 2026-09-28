@@ -27,7 +27,6 @@ class JoinOperation extends Operation{
             throw new DataTransferException("Join target columns does not exist");
         }
         $this->jointColumn = $column;
-        $this->setTableConfiguration($this->id,$this->validateThenGenerateColumns());
         return $this;
     }
     /**

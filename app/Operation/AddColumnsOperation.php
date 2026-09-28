@@ -7,7 +7,6 @@ class AddColumnsOperation extends Operation{
     public array $columns = [];
     public function add(array $columns):self{
         $this->columns = $columns;
-        $this->setTableConfiguration($this->id,$this->validateThenGenerateColumns());
         return $this;
     }
     public static function from(Operation $previousOperation):self{

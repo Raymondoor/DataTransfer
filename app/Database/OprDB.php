@@ -17,12 +17,10 @@ class OprDB extends Database{
 		\PDO::ATTR_TIMEOUT => 10
 	];
 	public static function dropAllTables():bool{
-		$query = match(self::$driver){
-			'sqlite' => "DELETE FROM main.sqlite_master WHERE TYPE = 'table'",
-			'mysql' => "",
-			'pgsql' => "",
-			default => throw new DataTransferException('No matching driver: '.self::$driver)
-		};
+		$tables = self::selectAllTables();
+		foreach($tables as $table){
+			self::exec("DROP TABLE IF EXISTS ".$table);
+		}
 		return true;
 	}
 }
