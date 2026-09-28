@@ -1,7 +1,13 @@
 # DataTransfer
-A data migration tool.
+A PHP data migration tool.
+
+## Overview
+A PHP library for describing and preparing database migrations as a sequence of data operations. It separates the source, an operational staging database, and the destination so that migration work can be organized and inspected before it is applied.
+
 
 ## Usage
+The example illustrates the intended migration flow.
+
 ```php
 use DataTransfer\DataTransfer;
 use DataTransfer\Operation\AddColumnsOperation;
@@ -10,10 +16,12 @@ use DataTransfer\Operation\JoinOperation;
 use DataTransfer\Operation\RenameOperation;
 use DataTransfer\Operation\CaptureOperation;
 use DataTransfer\Operation\SettleOperation;
+use DataTransfer\Operation\DistinctOperation;
+use DataTransfer\Operation\ModifyValuesOperation;
 
 DataTransfer::boot();
-DataTransfer::setSourceDB('sqlite:/path/to/db.sqlite'); // original
-DataTransfer::setOperationalDB('sqlite:/path/to/temp/db.sqlite'); // transactional DB
+DataTransfer::setSourceDB('sqlite', '/path/to/db.sqlite'); // original
+DataTransfer::setOperationalDB('sqlite', '/path/to/temp/db.sqlite'); // transactional DB
 DataTransfer::setTargetDB('mysql','host','dbname','user','pass'); // target database
 DataTransfer::connectDBs(); // establish PDO connection
 
@@ -25,13 +33,13 @@ $distinctGroups = $opr::register(DistinctOperation::from($groupsExtracted)->dist
 $renameAdjustGroups = $opr::register(RenameOperation::from($distinctGroups)->rename(['group' => 'group_name']));
 $addIdToGroup = $opr::register(AddColumnsOperation::from($renameAdjustGroups)->add('groups_id'));
 $populateId = $opr::register(ModifyValuesOperation::from($addIdToGroup)->modify(function(iterable $records){ // callback
-    $i = 1;
-    foreach($records as $record){
-        $record['group_id'] = $i;
-        $i++;
-        yield $record;
-        // return structure must not change. only values inside
-    }
+	$i = 1;
+	foreach($records as $record){
+		$record['group_id'] = $i;
+		$i++;
+		yield $record;
+		// return structure must not change. only values inside
+	}
 }));
 
 $joinToSyncGroupId = $opr::register(JoinOperation::from($usersOriginal)->join($populateId)->on('group_name')->source('group')->direction('left'));

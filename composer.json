@@ -1,6 +1,6 @@
 {
     "name": "raymondoor/datatransfer",
-    "description": "A data migration tool.",
+    "description": "A PHP data migration tool.",
     "version": "0.1",
     "type": "library",
     "keywords": ["Datatransfer", "migration"],
