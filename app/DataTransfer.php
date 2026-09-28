@@ -14,7 +14,7 @@ class DataTransfer{
     public static function boot(array $config = []):void{
         // do we need this?
     }
-    public static function setSrcDB(string $driver, string $host, string $name = '', string $user = '', string $pass = '', array $options = []):void{
+    public static function setSourceDB(string $driver, string $host, string $name = '', string $user = '', string $pass = '', array $options = []):void{
         SrcDB::$driver = $driver;
         SrcDB::$host = $host;
         SrcDB::$name = $name;

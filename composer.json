@@ -1,14 +1,14 @@
 {
     "name": "raymondoor/datatransfer",
-    "description": "An application frame blueprint.",
-    "version": "2.0.2",
+    "description": "A data migration tool.",
+    "version": "0.1",
     "type": "library",
-    "keywords": ["Datatransfer"],
-    "time": "2026-09-08",
+    "keywords": ["Datatransfer", "migration"],
+    "time": "2026-09-28",
     "license": "MIT",
     "require": {
         "php": ">=8.4",
-        "monolog/monolog": "^3.10"
+        "ext-pdo": ">=8.4"
     },
     "autoload": {
         "psr-4": {
@@ -19,8 +19,6 @@
         "phpunit/phpunit": "^10.5",
         "phpstan/phpstan": "^2.2",
         "symfony/var-dumper": "^6.4",
-        "fakerphp/faker": "^1.24",
-        "guzzlehttp/guzzle": "^8.0",
         "rector/rector": "^2.6"
     },
     "autoload-dev": {
