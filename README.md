@@ -10,14 +10,7 @@ The example illustrates the intended migration flow.
 
 ```php
 use DataTransfer\DataTransfer;
-use DataTransfer\Operation\AddColumnsOperation;
-use DataTransfer\Operation\ExtractOperation;
-use DataTransfer\Operation\JoinOperation;
-use DataTransfer\Operation\RenameOperation;
-use DataTransfer\Operation\CaptureOperation;
-use DataTransfer\Operation\SettleOperation;
-use DataTransfer\Operation\DistinctOperation;
-use DataTransfer\Operation\ModifyValuesOperation;
+use DataTransfer\Operation\{AddColumnsOperation, CaptureOperation, DistinctOperation, ExtractOperation, JoinOperation, ModifyValuesOperation, RenameOperation, SettleOperation, UnionOperation};
 
 DataTransfer::boot();
 DataTransfer::setSourceDB('sqlite', '/path/to/db.sqlite'); // original
