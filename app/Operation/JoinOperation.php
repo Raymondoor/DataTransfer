@@ -12,6 +12,7 @@ class JoinOperation extends Operation{
     }
     public static function from(Operation $previousOperation):self{
         $o = new self();
+        $o->id = OperationManager::generateId();
         $o->previousOperation = $previousOperation;
         return $o;
     }

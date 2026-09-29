@@ -10,6 +10,11 @@ class SettleOperation extends Operation{
     public string $table;
     public array $tableColumns;
     /**
+     * @var string[]
+     * @todo implement type conversions at the last moment?
+     */
+    public array $dataTypes = [];
+    /**
      * Creates a new table configuration and sets to `$this->tableConfig`
      */
     public function setTableConfiguration():void{

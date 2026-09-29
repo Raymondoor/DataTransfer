@@ -129,7 +129,7 @@ class DataTransfer{
                     OprDB::run($operation->tableConfig->inserter->query, DBParamFormatter::appendColon($newRecord));
                 }
                 if(self::$config['cli']){
-                    echo 'completed.'.PHP_EOL;
+                    echo 'transfer completed.'.PHP_EOL;
                 }
             }
         }
@@ -137,7 +137,7 @@ class DataTransfer{
     }
     /**
      * Finalize the transfer and insert to the new DB. Cannot run if there is no prior operation/transfer.
-     * @todo implement warning if data already exists in target
+     * @todo implement warning if data already exists in target before running
      */
     public static function settle():bool{
         foreach(OperationManager::$operationList as $operation){
@@ -151,7 +151,7 @@ class DataTransfer{
                     TrgtDB::run($operation->tableConfig->inserter->query, DBParamFormatter::appendColon($newRecord));
                 }
                 if(self::$config['cli']){
-                    echo 'transfer completed.'.PHP_EOL;
+                    echo 'settle completed.'.PHP_EOL;
                 }
             }
             

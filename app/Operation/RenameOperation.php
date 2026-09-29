@@ -46,7 +46,6 @@ class RenameOperation extends Operation{
     }
     public function transform(iterable $data):iterable{
         foreach($data as $row){
-            // @todo implement. either in sql using 'AS' or here.
             yield $row;
         }
     }

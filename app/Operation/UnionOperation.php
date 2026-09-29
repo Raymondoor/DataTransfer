@@ -30,6 +30,7 @@ class UnionOperation extends Operation{
         return 'SELECT * FROM '.$this->previousOperation->tableConfig->tablename;
     }
     public function transform(iterable $data):iterable{
+        // @todo implement union
         foreach($data as $row){
             yield $row;
         }

@@ -16,11 +16,20 @@ class ModifyValuesOperation extends Operation{
         $this->modification = $modification;
         return $this;
     }
+    public static function from(Operation $previousOperation):self{
+        $o = new self();
+        $o->id = OperationManager::generateId();
+        $o->previousOperation = $previousOperation;
+        return $o;
+    }
     public function validateThenGenerateColumns():array{
         $columns = $this->previousOperation->tableConfig->columns;
         return $columns;
     }
     public function transform(iterable $data):iterable{
-        yield ($this->modification)($data);
+        $result = ($this->modification)($data);
+        foreach($result as $row){
+            yield $row;
+        }
     }
 }
