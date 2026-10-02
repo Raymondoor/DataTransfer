@@ -8,7 +8,7 @@ use DataTransfer\Exception\DataTransferException;
 use DataTransfer\Operation\CaptureOperation;
 use DataTransfer\Operation\SettleOperation;
 use DataTransfer\Operation\OperationManager;
-use DataTransfer\Util\DBParamFormatter;
+use DataTransfer\Util\DBQueryFormatter;
 class DataTransfer{
     public static array $config = [
         'cli' => true,
@@ -128,7 +128,7 @@ class DataTransfer{
                 }
                 $newData = $operation->transform($data);
                 foreach($newData as $newRecord){
-                    OprDB::run($operation->tableConfig->inserter->query, DBParamFormatter::prependColon($newRecord));
+                    OprDB::run($operation->tableConfig->inserter->query, DBQueryFormatter::prependColon($newRecord));
                 }
                 if(self::$config['cli']){
                     echo 'transfer completed.'.PHP_EOL;
@@ -150,7 +150,7 @@ class DataTransfer{
                 $data = OprDB::selectUnbuffered($operation->selectQueryFromPrevious());
                 $newData = $operation->transform($data);
                 foreach($newData as $newRecord){
-                    TrgtDB::run($operation->tableConfig->inserter->query, DBParamFormatter::prependColon($newRecord));
+                    TrgtDB::run($operation->tableConfig->inserter->query, DBQueryFormatter::prependColon($newRecord));
                 }
                 if(self::$config['cli']){
                     echo 'settle completed.'.PHP_EOL;

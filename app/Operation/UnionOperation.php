@@ -2,35 +2,64 @@
 namespace DataTransfer\Operation;
 
 use DataTransfer\Exception\DataTransferException;
+use DataTransfer\Util\DBQueryFormatter;
+/**
+ * @todo not tested yet
+ */
 class UnionOperation extends Operation{
     public Operation $unionOperation;
+    public bool $unionAll = false;
+    public array $fromColumns = [];
+    public array $unionColumns = [];
+    /**
+     * @param Operation $unionOperation second operation to union with
+     */
     public function union(Operation $unionOperation):self{
         $this->unionOperation = $unionOperation;
         return $this;
     }
+    public function all(bool $all = true):self{
+        $this->unionAll = $all;
+        return $this;
+    }
+    /**
+     * Says `from`, but is just an convention from other operations. there is no order in union
+     * @param Operation $previousOperation first operation to union with
+     */
     public static function from(Operation $previousOperation):self{
         $o = new self();
         $o->id = OperationManager::generateId();
         $o->previousOperation = $previousOperation;
         return $o;
     }
+    public function fromColumns(array|string $columns):self{
+        $this->fromColumns = is_array($columns) ? $columns : [$columns];
+        return $this;
+    }
+    public function unionColumns(array|string $columns):self{
+        $this->unionColumns = is_array($columns) ? $columns : [$columns];
+        return $this;
+    }
     public function validateThenGenerateColumns():array{
-        $diffOnPrevious = array_diff($this->previousOperation->tableConfig->columns,$this->unionOperation->tableConfig->columns);
-        if($diffOnPrevious !== []){
-            throw new \DataTransfer\Exception\DataTransferValueException('Columns: '.implode(', ',$diffOnPrevious).'does not exist on the previous operation');
+        // on both operations, check if the columns exist, and if not, throw an exception
+        if(self::columnExists($this->previousOperation->tableConfig->columns, $this->fromColumns) === false){
+            throw new DataTransferException("Some columns in the first operation do not exist in the table.");
         }
-        $diffOnUnion = array_diff($this->unionOperation->tableConfig->columns,$this->previousOperation->tableConfig->columns);
-        if($diffOnUnion !== []){
-            throw new \DataTransfer\Exception\DataTransferValueException('Columns: '.implode(', ',$diffOnUnion).'does not exist on the union operation');
+        if(self::columnExists($this->unionOperation->tableConfig->columns, $this->unionColumns) === false){
+            throw new DataTransferException("Some columns in the second operation do not exist in the table.");
         }
-        return $this->previousOperation->tableConfig->columns;
+        // check if the number of columns is the same
+        if(count($this->fromColumns) !== count($this->unionColumns)){
+            throw new DataTransferException("The number of columns in the first operation does not match the number of columns in the second operation.");
+        }
+        return $this->fromColumns;
     }
     public function selectQueryFromPrevious():string{
-        // @todo implement union
-        return 'SELECT * FROM '.$this->previousOperation->tableConfig->tablename;
+        $fromColumns = DBQueryFormatter::wrapWithBackticks($this->fromColumns);
+        $unionColumns = DBQueryFormatter::wrapWithBackticks($this->unionColumns);
+        return "SELECT ".implode(", ", $fromColumns)." FROM ".$this->previousOperation->tableConfig->tablename." UNION".($this->unionAll ? " ALL" : '')." SELECT ".implode(", ", $unionColumns)." FROM ".$this->unionOperation->tableConfig->tablename;
     }
     public function transform(iterable $data):iterable{
-        // @todo implement union
         foreach($data as $row){
             yield $row;
         }
