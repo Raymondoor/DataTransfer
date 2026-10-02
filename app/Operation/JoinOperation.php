@@ -27,33 +27,34 @@ class JoinOperation extends Operation{
     }
     /**
      * Joining direction
-     * @param 'left'|'both'|'right' $direction
+     * @param 'left'|'inner'|'right'|'full'|'self' $direction
      * @return void
      */
-    public function direction(string $direction = 'left'):self{
-        $this->direction = $direction;
+    public function direction(string $direction = 'LEFT'):self{
+        // make sure direction is valid
+        $validDirections = ['LEFT', 'INNER', 'RIGHT', 'FULL', 'SELF'];
+        if(!in_array(strtoupper($direction), $validDirections)){
+            throw new DataTransferException("Invalid join direction '$direction'. Valid directions are: ".implode(', ', $validDirections));
+        }
+        $this->direction = strtoupper($direction);
         return $this;
     }
     public function validateThenGenerateColumns():array{
-        // @todo implement
-        // select cols from previous and joint operation, find join, etc
         if(!$this->previousOperation::columnExists($this->previousOperation->tableConfig->columns, [$this->sourceColumn])){
             throw new DataTransferException("Join source column does not exist");
         }
         if(!$this->jointOperation::columnExists($this->jointOperation->tableConfig->columns, [$this->jointColumn])){
             throw new DataTransferException("Join target column does not exist");
         }
-        // generate new table columns by merging previous and joint operation columns
         $columns = array_merge($this->previousOperation->tableConfig->columns, $this->jointOperation->tableConfig->columns);
         return $columns;
     }
     public function selectQueryFromPrevious():string{
-        // @todo implement
-        return 'SELECT * FROM '.$this->previousOperation->tableConfig->tablename.' JOIN '.$this->jointOperation->tableConfig->tablename.' ON '.$this->previousOperation->tableConfig->tablename.'.'.$this->sourceColumn.' = '.$this->jointOperation->tableConfig->tablename.'.'.$this->jointColumn;
+        return 'SELECT * FROM `'.$this->previousOperation->tableConfig->tablename.'` '.$this->direction.' JOIN `'.$this->jointOperation->tableConfig->tablename.'` ON `'.$this->previousOperation->tableConfig->tablename.'`.`'.$this->sourceColumn.'` = `'.$this->jointOperation->tableConfig->tablename.'`.`'.$this->jointColumn.'`';
     }
     public function transform(iterable $data):iterable{
-        // @todo implement
-        // just select and send back directly. new cols should be null anyways
-        yield [];
+        foreach($data as $row){
+            yield $row;
+        }
     }
 }

@@ -18,7 +18,7 @@ $addIdToGroup = $opr::register(AddColumnsOperation::from($renameAdjustGroups)->a
 $populateId = $opr::register(ModifyValuesOperation::from($addIdToGroup)->modify(function(iterable $records){ // callback
 	$i = 1;
 	foreach($records as $record){
-		$record['group_id'] = $i;
+		$record['groups_id'] = $i;
 		$i++;
 		yield $record;
 		// return structure must not change. only values inside
@@ -34,5 +34,5 @@ $settleUser = $opr::register(SettleOperation::from($usersFinal)->settle('users')
 
 dump(DataTransfer::analyze()); // array of operations' query
 DataTransfer::createTables(true); // creates intermediate tables. does not touch actual data yet.
-// DataTransfer::transfer(); // execute the transfer apart from settling to new DB
+DataTransfer::transfer(); // execute the transfer apart from settling to new DB
 // DataTransfer::settle(); // finalize the transfer and insert to the new DB.

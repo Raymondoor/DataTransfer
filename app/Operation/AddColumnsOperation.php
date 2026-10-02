@@ -5,8 +5,8 @@ namespace DataTransfer\Operation;
  */
 class AddColumnsOperation extends Operation{
     public array $columns = [];
-    public function add(array $columns):self{
-        $this->columns = $columns;
+    public function add(array|string $columns):self{
+        $this->columns = is_string($columns) ? [$columns] : $columns;
         return $this;
     }
     public static function from(Operation $previousOperation):self{
