@@ -116,8 +116,8 @@ abstract class Database{
 		return $sanitized;
 	}
 	public static function sanitizeSelectColumnsMysql(string $table):array{
-		// @todo not implemented yet
-		$raw = static::select("select column_name as columns from information_schema.columns where table_name = '".$table."'");
+		// @todo not tested yet
+		$raw = static::select("SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='".static::$name."' AND `TABLE_NAME`='".$table."'");
 		if(empty($raw)){
 			throw new DataTransferException("Table '$table' does not exist in the database.");
 		}
