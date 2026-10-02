@@ -2,6 +2,7 @@
 namespace DataTransfer\Operation;
 
 use ReflectionProperty;
+use DataTransfer\Exception\DataTransferException;
 
 class OperationManager{
     /**
@@ -30,7 +31,11 @@ class OperationManager{
         foreach(self::$operationList as $op){
             $rp = new ReflectionProperty($op::class, 'tableConfig');
             if(!$rp->isInitialized($op))
-            $op->setTableConfiguration();
+                try{
+                    $op->setTableConfiguration();
+                }catch(DataTransferException $dte){
+                    throw new DataTransferException("Operation ID: ".$op->id." - ".$dte->getMessage());
+                }
         }
     }
 }

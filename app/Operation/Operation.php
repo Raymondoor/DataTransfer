@@ -3,6 +3,10 @@ namespace DataTransfer\Operation;
 use DataTransfer\Table\IntermediateTableConfiguration;
 abstract class Operation{
     public string $id;
+    /**
+     * Descriptory label for users to understand what the operation does. Optional
+     */
+    public ?string $label = null;
     public ?Operation $previousOperation = null;
     public IntermediateTableConfiguration $tableConfig;
     /**

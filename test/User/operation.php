@@ -29,11 +29,10 @@ $joinToSyncGroupId = $opr::register(JoinOperation::from($usersOriginal)->join($p
 $usersFinal = $opr::register(ExtractOperation::from($joinToSyncGroupId)->extract(['id', 'name', 'groups_id', 'created_at'])); // re-extract
 $groupsAdjust = $opr::register(RenameOperation::from($populateId)->rename(['groups_id'=>'id','group_name'=>'name'])); // change col name on groups' id
 $groupsFinal = $opr::register(AddColumnsOperation::from($groupsAdjust)->add(['created_at'])); // add created_at to groups
-
 $settleGroup = $opr::register(SettleOperation::from($groupsFinal)->settle('groups')); // table and column name must match target
 $settleUser = $opr::register(SettleOperation::from($usersFinal)->settle('users')); // settle after groups to respect fereign key constraints
 
-var_dump(DataTransfer::analyze()); // array of operations' query
-// DataTransfer::createTables(true); // creates intermediate tables. does not touch actual data yet.
+dump(DataTransfer::analyze()); // array of operations' query
+DataTransfer::createTables(true); // creates intermediate tables. does not touch actual data yet.
 // DataTransfer::transfer(); // execute the transfer apart from settling to new DB
 // DataTransfer::settle(); // finalize the transfer and insert to the new DB.

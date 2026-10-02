@@ -94,6 +94,9 @@ abstract class Database{
 	}
 	public static function sanitizeSelectColumnsSqlite(string $table):array{
 		$raw = static::select("select name from pragma_table_info('".$table."')");
+		if(empty($raw)){
+			throw new DataTransferException("Table '$table' does not exist in the database.");
+		}
 		$sanitized = [];
 		foreach($raw as $column){
 			$sanitized[] = $column['name'];
@@ -103,6 +106,9 @@ abstract class Database{
 	public static function sanitizeSelectColumnsPgsql(string $table):array{
 		// @todo not implemented yet
 		$raw = static::select("select column_name as columns from information_schema.columns where table_name = '".$table."'");
+		if(empty($raw)){
+			throw new DataTransferException("Table '$table' does not exist in the database.");
+		}
 		$sanitized = [];
 		foreach($raw as $column){
 			$sanitized[] = $column['name'];
@@ -112,6 +118,9 @@ abstract class Database{
 	public static function sanitizeSelectColumnsMysql(string $table):array{
 		// @todo not implemented yet
 		$raw = static::select("select column_name as columns from information_schema.columns where table_name = '".$table."'");
+		if(empty($raw)){
+			throw new DataTransferException("Table '$table' does not exist in the database.");
+		}
 		$sanitized = [];
 		foreach($raw as $column){
 			$sanitized[] = $column['name'];
