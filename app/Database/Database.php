@@ -104,14 +104,14 @@ abstract class Database{
 		return $sanitized;
 	}
 	public static function sanitizeSelectColumnsPgsql(string $table):array{
-		// @todo not implemented yet
-		$raw = static::select("select column_name as columns from information_schema.columns where table_name = '".$table."'");
+		// @todo not tested yet
+		$raw = static::select("SELECT column_name FROM information_schema.columns WHERE table_name = '".$table."'");
 		if(empty($raw)){
 			throw new DataTransferException("Table '$table' does not exist in the database.");
 		}
 		$sanitized = [];
 		foreach($raw as $column){
-			$sanitized[] = $column['name'];
+			$sanitized[] = $column['column_name'];
 		}
 		return $sanitized;
 	}
@@ -123,7 +123,7 @@ abstract class Database{
 		}
 		$sanitized = [];
 		foreach($raw as $column){
-			$sanitized[] = $column['name'];
+			$sanitized[] = $column['COLUMN_NAME'];
 		}
 		return $sanitized;
 	}
