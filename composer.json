@@ -1,14 +1,14 @@
 {
     "name": "raymondoor/datatransfer",
     "description": "A PHP data migration tool.",
-    "version": "0.1",
+    "version": "0.2.0",
     "type": "library",
     "keywords": ["Datatransfer", "migration"],
     "time": "2026-09-28",
     "license": "MIT",
     "require": {
         "php": ">=8.4",
-        "ext-pdo": ">=8.4"
+        "ext-pdo": "*"
     },
     "autoload": {
         "psr-4": {
