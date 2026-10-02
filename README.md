@@ -28,7 +28,7 @@ $usersOriginal = $opr::register(CaptureOperation::fromTable('users')); // eg. co
 $groupsExtracted = $opr::register(ExtractOperation::from($usersOriginal)->extract('group'));
 $distinctGroups = $opr::register(DistinctOperation::from($groupsExtracted)->distinct('group'));
 $renameAdjustGroups = $opr::register(RenameOperation::from($distinctGroups)->rename(['group' => 'group_name']));
-$addIdToGroup = $opr::register(AddColumnsOperation::from($renameAdjustGroups)->add('groups_id'));
+$addIdToGroup = $opr::register(AddColumnsOperation::from($renameAdjustGroups)->add(['groups_id']));
 $populateId = $opr::register(ModifyValuesOperation::from($addIdToGroup)->modify(function(iterable $records){ // callback
 	$i = 1;
 	foreach($records as $record){
@@ -41,7 +41,7 @@ $populateId = $opr::register(ModifyValuesOperation::from($addIdToGroup)->modify(
 
 $joinToSyncGroupId = $opr::register(JoinOperation::from($usersOriginal)->join($populateId)->on('group_name')->source('group')->direction('left'));
 $usersFinal = $opr::register(ExtractOperation::from($joinToSyncGroupId)->extract(['id','name', 'password', 'groups_id'])); // re-extract
-$groupsFinal = $opr::register(RenameOperation::from($populateId)->rename(['groups_id'])->to(['id'])); // change col name on groups' id
+$groupsFinal = $opr::register(RenameOperation::from($populateId)->rename(['groups_id'=>'id'])); // change col name on groups' id
 
 $settleGroup = $opr::register(SettleOperation::from($groupsFinal)->settle('groups')); // table and column name must match target
 $settleUser = $opr::register(SettleOperation::from($usersFinal)->settle('users')); // settle after groups to respect fereign key constraints

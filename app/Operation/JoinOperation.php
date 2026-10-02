@@ -5,6 +5,7 @@ use DataTransfer\Exception\DataTransferException;
 class JoinOperation extends Operation{
     public Operation $jointOperation;
     public string $jointColumn;
+    public string $sourceColumn;
     public string $direction = 'left';
     public function join(Operation $jointOperation):self{
         $this->jointOperation = $jointOperation;
@@ -17,16 +18,10 @@ class JoinOperation extends Operation{
         return $o;
     }
     public function source(string $column):self{
-        if(!$this->jointOperation::columnExists($this->jointOperation->tableConfig->columns, [$column])){
-            throw new DataTransferException("Join target columns does not exist");
-        }
-        $this->jointColumn = $column;
+        $this->sourceColumn = $column;
         return $this;
     }
     public function on(string $column):self{
-        if(!$this->previousOperation::columnExists($this->previousOperation->tableConfig->columns, [$column])){
-            throw new DataTransferException("Join target columns does not exist");
-        }
         $this->jointColumn = $column;
         return $this;
     }
@@ -42,13 +37,19 @@ class JoinOperation extends Operation{
     public function validateThenGenerateColumns():array{
         // @todo implement
         // select cols from previous and joint operation, find join, etc
-        $columns = $this->previousOperation->tableConfig->columns;
-
+        if(!$this->previousOperation::columnExists($this->previousOperation->tableConfig->columns, [$this->sourceColumn])){
+            throw new DataTransferException("Join source column does not exist");
+        }
+        if(!$this->jointOperation::columnExists($this->jointOperation->tableConfig->columns, [$this->jointColumn])){
+            throw new DataTransferException("Join target column does not exist");
+        }
+        // generate new table columns by merging previous and joint operation columns
+        $columns = array_merge($this->previousOperation->tableConfig->columns, $this->jointOperation->tableConfig->columns);
         return $columns;
     }
     public function selectQueryFromPrevious():string{
         // @todo implement
-        return 'SELECT * FROM '.$this->previousOperation->tableConfig->tablename;
+        return 'SELECT * FROM '.$this->previousOperation->tableConfig->tablename.' JOIN '.$this->jointOperation->tableConfig->tablename.' ON '.$this->previousOperation->tableConfig->tablename.'.'.$this->sourceColumn.' = '.$this->jointOperation->tableConfig->tablename.'.'.$this->jointColumn;
     }
     public function transform(iterable $data):iterable{
         // @todo implement

@@ -65,7 +65,7 @@ class DataTransfer{
     }
     /**
      * Checks config validity and returns all schema that will be ran.
-     * @todo implement warning feat on src & target column if not used.
+     * @todo implement warning feat on src & target column if not used. catch exception, and report where gone wrong
      * @return ?array
      */
     public static function analyze():?array{
