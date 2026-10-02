@@ -128,7 +128,7 @@ class DataTransfer{
                 }
                 $newData = $operation->transform($data);
                 foreach($newData as $newRecord){
-                    OprDB::run($operation->tableConfig->inserter->query, DBParamFormatter::appendColon($newRecord));
+                    OprDB::run($operation->tableConfig->inserter->query, DBParamFormatter::prependColon($newRecord));
                 }
                 if(self::$config['cli']){
                     echo 'transfer completed.'.PHP_EOL;
@@ -150,7 +150,7 @@ class DataTransfer{
                 $data = OprDB::selectUnbuffered($operation->selectQueryFromPrevious());
                 $newData = $operation->transform($data);
                 foreach($newData as $newRecord){
-                    TrgtDB::run($operation->tableConfig->inserter->query, DBParamFormatter::appendColon($newRecord));
+                    TrgtDB::run($operation->tableConfig->inserter->query, DBParamFormatter::prependColon($newRecord));
                 }
                 if(self::$config['cli']){
                     echo 'settle completed.'.PHP_EOL;
