@@ -51,3 +51,56 @@ DataTransfer::createTables(true); // creates intermediate tables. does not touch
 DataTransfer::transfer(); // execute the transfer apart from settling to new DB
 DataTransfer::settle(); // finalize the transfer and insert to the new DB.
 ```
+
+## Why DataTransfer?
+
+### Make complicated migrations manageable
+
+Database migrations can become difficult when the destination is not simply a newer version of the source.
+
+A schema may need to be split apart, combined, reorganized, or have its data represented differently. What starts as a few schema changes can quickly become a complicated chain of data transformations.
+
+DataTransfer takes a different approach:
+
+> **Break the complicated migration into simple transformations.**
+
+Rather than trying to express the entire migration as one large operation, each transformation can be kept small and composed with the others.
+
+A complicated migration can therefore be built progressively:
+
+```text
+source
+  ↓
+simple transformation
+  ↓
+simple transformation
+  ↓
+simple transformation
+  ↓
+target
+```
+
+The complexity is still there — but it is organized into steps that can be understood individually.
+
+This makes it possible to handle substantial changes in how data is structured without turning the migration itself into an increasingly complicated piece of code.
+
+### Keep migrations understandable
+
+Complexity is only half of the problem.
+
+A migration that works today can still become difficult to understand, inspect, or change later.
+
+DataTransfer is designed around **immutable operations**. A transformation does not silently alter the result of an earlier transformation. Instead, each operation produces a new result that can become the basis for subsequent work.
+
+That gives the migration a history.
+
+Each step can be examined independently, and the relationships between steps can be analyzed rather than hidden inside a sequence of destructive changes.
+
+The migration can therefore be treated not just as something to execute, but as something that can be **understood, analyzed, and recorded**.
+
+When a migration changes, you can reason about what changed and where it affects the process.
+
+> **A migration should be more than something that runs. It should be something you can understand.**
+
+## Docs
+Not written yet...
