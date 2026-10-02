@@ -4,6 +4,10 @@ A PHP data migration tool.
 ## Overview
 A PHP library for describing and preparing database migrations as a sequence of data operations. It separates the source, an operational staging database, and the destination so that migration work can be organized and inspected before it is applied.
 
+## Installation
+```sh
+composer require raymondoor/datatransfer
+```
 
 ## Usage
 The example illustrates the intended migration flow.
