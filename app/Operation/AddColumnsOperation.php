@@ -19,7 +19,7 @@ class AddColumnsOperation extends Operation{
         $columns = $this->previousOperation->tableConfig->columns;
         $existingColumn = self::columnExists($this->columns, $columns); 
         if($existingColumn !== false){
-            throw new \DataTransfer\Exception\DataTransferException("Column '$existingColumn' already exists in the table.");
+            throw new \DataTransfer\Exception\DataTransferValueException("Column '$existingColumn' already exists in the table.");
         }
         array_push($columns, ...$this->columns);
         return $columns;

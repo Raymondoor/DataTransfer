@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 namespace DataTransfer\Operation;
 use DataTransfer\Database\TrgtDB;
-use DataTransfer\Table\IntermediateTableConfiguration;
+use DataTransfer\Configuration\TableConfiguration;
 use DataTransfer\Exception\DataTransferException;
 /**
  * Magic operation to treat target DB insert as a settlement operation. This operation will not generate any new columns, but will validate the existing columns and ensure that the data is settled correctly.
@@ -18,7 +18,7 @@ class SettleOperation extends Operation{
      * Creates a new table configuration and sets to `$this->tableConfig`
      */
     public function setTableConfiguration():void{
-        $this->tableConfig = new IntermediateTableConfiguration($this->table, $this->validateThenGenerateColumns());
+        $this->tableConfig = new TableConfiguration($this->table, $this->validateThenGenerateColumns());
         $this->tableConfig->setInsert();
     }
     public function settle(string $table):self{
@@ -42,7 +42,7 @@ class SettleOperation extends Operation{
         sort($sourceColumns, SORT_STRING);
         sort($targetColumns, SORT_STRING);
         if($sourceColumns !== $targetColumns){
-            throw new DataTransferException("Cannot settle to target table, column names seems to not match.");
+            throw new \DataTransfer\Exception\DataTransferValueException("Cannot settle to target table, column names seems to not match.");
         }
         return $this->tableColumns;
     }

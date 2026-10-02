@@ -18,7 +18,7 @@ class DistinctOperation extends Operation{
     public function validateThenGenerateColumns():array{
         $columns = $this->previousOperation->tableConfig->columns;
         if(self::columnExists($columns, [$this->column]) === false){
-            throw new \DataTransfer\Exception\DataTransferException("Column '$this->column' does not exist in the table.");
+            throw new \DataTransfer\Exception\DataTransferValueException("Column '$this->column' does not exist in the table.");
         }
         return [$this->column];
     }

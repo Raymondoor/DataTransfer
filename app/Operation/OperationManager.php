@@ -2,7 +2,7 @@
 namespace DataTransfer\Operation;
 
 use ReflectionProperty;
-use DataTransfer\Exception\DataTransferException;
+use DataTransfer\Exception\{DataTransferException, DataTransferValueException};
 
 class OperationManager{
     /**
@@ -10,6 +10,11 @@ class OperationManager{
      */
     public static array $operationList = [];
     public static int $idCounter = 0;
+    /**
+     * array of data of operations that failed. includes operation id, label, error message
+     * @var array
+     */
+    public static array $failedConfigOperationsData = [];
     public static function boot():self{
         return new static();
     }
@@ -30,12 +35,17 @@ class OperationManager{
     public static function setAllTableConfiguration():void{
         foreach(self::$operationList as $op){
             $rp = new ReflectionProperty($op::class, 'tableConfig');
-            if(!$rp->isInitialized($op))
+            if(!$rp->isInitialized($op)){
                 try{
                     $op->setTableConfiguration();
-                }catch(DataTransferException $dte){
-                    throw new DataTransferException("Operation ID: ".$op->id." - ".$dte->getMessage());
+                }catch(DataTransferValueException $dte){
+                    self::$failedConfigOperationsData[] = [
+                        'id' => $op->id,
+                        'label' => $op->label,
+                        'error' => $dte->getMessage()
+                    ];
                 }
+            }
         }
     }
 }

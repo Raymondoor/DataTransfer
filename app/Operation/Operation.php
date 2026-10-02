@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 namespace DataTransfer\Operation;
-use DataTransfer\Table\IntermediateTableConfiguration;
+use DataTransfer\Configuration\TableConfiguration;
 abstract class Operation{
     public string $id;
     /**
@@ -8,24 +8,29 @@ abstract class Operation{
      */
     public ?string $label = null;
     public ?Operation $previousOperation = null;
-    public IntermediateTableConfiguration $tableConfig;
+    public TableConfiguration $tableConfig;
+    public function setLabel(?string $label = null):self{
+        $this->label = $label;
+        return $this;
+    }
     /**
      * Creates a new table configuration and sets to `$this->tableConfig`
      */
     public function setTableConfiguration():void{
-        $this->tableConfig = new IntermediateTableConfiguration($this->id, $this->validateThenGenerateColumns());
+        $this->tableConfig = new TableConfiguration($this->id, $this->validateThenGenerateColumns());
         $this->tableConfig->setCreate();
         $this->tableConfig->setInsert();
     }
     /**
      * As it says, validates if the relation is correct or not based on the original columns, then returns the newly generated columns list
-     * @return ?array
-     * @throws \DataTransfer\Exception\DataTransferException;
+     * @return string[] returns the newly generated columns list.
+     * @throws \DataTransfer\Exception\DataTransferValueException;
      */
-    abstract public function validateThenGenerateColumns():?array;
+    abstract public function validateThenGenerateColumns():array;
     /**
      * Checks if in a given array, for each column, there is a match in the needle.
      * @return string|false returns the first match or false if there isn't.
+     * @todo not so useful?? may be used wrongly, so check if it is used correctly in the future.
      */
     public static function columnExists(array $needle, array $haystack):string|false{
         foreach($haystack as $column){

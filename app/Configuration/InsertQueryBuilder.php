@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Table;
-use DataTransfer\Table\IntermediateTableConfiguration;
+namespace DataTransfer\Configuration;
+use DataTransfer\Configuration\TableConfiguration;
 use DataTransfer\Exception\DataTransferException;
 use DataTransfer\Database\OprDB;
-class IntermediateTableInserter{
+class InsertQueryBuilder{
     public string $query;
-    public IntermediateTableConfiguration $config;
-    public function __construct(IntermediateTableConfiguration $config){
+    public TableConfiguration $config;
+    public function __construct(TableConfiguration $config){
         $this->config = $config;
     }
     public function createQuery():void{

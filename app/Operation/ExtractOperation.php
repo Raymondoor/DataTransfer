@@ -19,7 +19,7 @@ class ExtractOperation extends Operation{
         $columns = $this->previousOperation->tableConfig->columns;
         foreach($this->columns as $column){
             if(self::columnExists($columns, [$column]) === false){
-                throw new \DataTransfer\Exception\DataTransferException("Column '$column' does not exist in the table.");
+                throw new \DataTransfer\Exception\DataTransferValueException("Column '$column' does not exist in the table.");
             }
         }
         return $this->columns;

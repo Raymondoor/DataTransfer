@@ -2,7 +2,7 @@
 A PHP data migration tool.
 
 ## Overview
-A PHP library for describing and preparing database migrations as a sequence of data operations. It separates the source, an operational staging database, and the destination so that migration work can be organized and inspected before it is applied.
+A PHP tool for describing and preparing database migrations as a sequence of data operations. It separates the source, an operational staging database, and the destination so that migration work can be organized and inspected before it is applied.
 
 ## Installation
 ```sh
@@ -11,6 +11,10 @@ composer require raymondoor/datatransfer
 
 ## Usage
 The example illustrates the intended migration flow.
+
+### Prerequisites
+1. The source database has `users` table with columns [id, name, group, created_at].
+2. The target database will have two tables `users` and `groups` table with [id, name, groups_id, created_at] and [id, name, created_at] respectively.
 
 ```php
 use DataTransfer\DataTransfer;
@@ -23,7 +27,7 @@ DataTransfer::setTargetDB('mysql','host','dbname','user','pass'); // target data
 DataTransfer::connectDBs(); // establish PDO connection
 
 $opr = DataTransfer::operator(); // returns OperationManager
-$usersOriginal = $opr::register(CaptureOperation::fromTable('users')); // eg. consists of [id, name, password, group]
+$usersOriginal = $opr::register(CaptureOperation::fromTable('users')); // eg. consists of [id, name, group, created_at]
 
 $groupsExtracted = $opr::register(ExtractOperation::from($usersOriginal)->extract('group'));
 $distinctGroups = $opr::register(DistinctOperation::from($groupsExtracted)->distinct('group'));
@@ -32,7 +36,7 @@ $addIdToGroup = $opr::register(AddColumnsOperation::from($renameAdjustGroups)->a
 $populateId = $opr::register(ModifyValuesOperation::from($addIdToGroup)->modify(function(iterable $records){ // callback
 	$i = 1;
 	foreach($records as $record){
-		$record['group_id'] = $i;
+		$record['groups_id'] = $i;
 		$i++;
 		yield $record;
 		// return structure must not change. only values inside
@@ -40,11 +44,19 @@ $populateId = $opr::register(ModifyValuesOperation::from($addIdToGroup)->modify(
 }));
 
 $joinToSyncGroupId = $opr::register(JoinOperation::from($usersOriginal)->join($populateId)->on('group_name')->source('group')->direction('left'));
-$usersFinal = $opr::register(ExtractOperation::from($joinToSyncGroupId)->extract(['id','name', 'password', 'groups_id'])); // re-extract
-$groupsFinal = $opr::register(RenameOperation::from($populateId)->rename(['groups_id'=>'id'])); // change col name on groups' id
+$usersFinal = $opr::register(ExtractOperation::from($joinToSyncGroupId)->extract(['id', 'name', 'groups_id', 'created_at'])); // re-extract
+
+$groupsAdjust = $opr::register(RenameOperation::from($populateId)->rename(['groups_id'=>'id','group_name'=>'name'])); // change col name on groups
+$groupsAddTimestamp = $opr::register(AddColumnsOperation::from($groupsAdjust)->add(['created_at'])); // add created_at to groups
+$groupsFinal = $opr::register(ModifyValuesOperation::from($groupsAddTimestamp)->modify(function(iterable $records){
+	foreach($records as $record){
+		$record['created_at'] = date('Y-m-d H:i:s');
+		yield $record;
+	}
+})); // add created_at value to groups
 
 $settleGroup = $opr::register(SettleOperation::from($groupsFinal)->settle('groups')); // table and column name must match target
-$settleUser = $opr::register(SettleOperation::from($usersFinal)->settle('users')); // settle after groups to respect fereign key constraints
+$settleUser = $opr::register(SettleOperation::from($usersFinal)->settle('users')); // settle after groups to respect foreign key constraints
 
 var_dump(DataTransfer::analyze()); // array of operations' query
 DataTransfer::createTables(true); // creates intermediate tables. does not touch actual data yet.

@@ -41,10 +41,10 @@ class JoinOperation extends Operation{
     }
     public function validateThenGenerateColumns():array{
         if(!$this->previousOperation::columnExists($this->previousOperation->tableConfig->columns, [$this->sourceColumn])){
-            throw new DataTransferException("Join source column does not exist");
+            throw new \DataTransfer\Exception\DataTransferValueException("Join source column does not exist");
         }
         if(!$this->jointOperation::columnExists($this->jointOperation->tableConfig->columns, [$this->jointColumn])){
-            throw new DataTransferException("Join target column does not exist");
+            throw new \DataTransfer\Exception\DataTransferValueException("Join target column does not exist");
         }
         $columns = array_merge($this->previousOperation->tableConfig->columns, $this->jointOperation->tableConfig->columns);
         return $columns;

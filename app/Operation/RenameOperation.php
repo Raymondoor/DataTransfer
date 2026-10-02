@@ -22,10 +22,10 @@ class RenameOperation extends Operation{
         $columns = $this->previousOperation->tableConfig->columns;
         foreach($this->modifications as $oldName => $newName){
             if(!in_array($oldName, $columns)){
-                throw new DataTransferException("Column $oldName does not exist in the original columns");
+                throw new \DataTransfer\Exception\DataTransferValueException("Column $oldName does not exist in the original columns");
             }
             if(in_array($newName, $columns)){
-                throw new DataTransferException("Column $newName already exists in the original columns");
+                throw new \DataTransfer\Exception\DataTransferValueException("Column $newName already exists in the original columns");
             }
             $index = array_search($oldName, $columns);
             $columns[$index] = $newName;

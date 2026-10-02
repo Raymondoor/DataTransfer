@@ -1,8 +1,8 @@
 # Project Overview
 
-DataTransfer is a PHP library for describing database migrations as an ordered sequence of data operations. Its goal is to make migrations that reshape data easier to organize: instead of treating a migration as a single copy from one database to another, a user can describe intermediate datasets and how they lead to the destination.
+DataTransfer is a PHP tool for describing database migrations as an ordered sequence of data operations. Its goal is to make migrations that reshape data easier to organize: instead of treating a migration as a single copy from one database to another, a user can describe intermediate datasets and how they lead to the destination.
 
-The library is currently a work in progress. This page describes the project's purpose and architecture, not a complete usage guide.
+This tool is currently a work in progress. This page describes the project's purpose and architecture, not a complete usage guide.
 
 ## Intended Workflow
 

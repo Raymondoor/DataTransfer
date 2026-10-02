@@ -6,8 +6,8 @@ use DataTransfer\Database\OprDB;
 use DataTransfer\Database\TrgtDB;
 use DataTransfer\Exception\DataTransferException;
 use DataTransfer\Operation\CaptureOperation;
-use DataTransfer\Operation\OperationManager;
 use DataTransfer\Operation\SettleOperation;
+use DataTransfer\Operation\OperationManager;
 use DataTransfer\Util\DBParamFormatter;
 class DataTransfer{
     public static array $config = [
@@ -66,6 +66,7 @@ class DataTransfer{
     /**
      * Checks config validity and returns all schema that will be ran.
      * @todo implement warning feat on src & target column if not used. catch exception, and report where gone wrong
+     * @todo style a bit
      * @return ?array
      */
     public static function analyze():?array{
@@ -76,6 +77,7 @@ class DataTransfer{
             $reflection = new \ReflectionClass($operation::class);
             $set['operation'] = $reflection->getShortName();
             $set['id'] = $operation->id;
+            $set['label'] = $operation->label;
             if($operation instanceof SettleOperation){
                 $set['create'] = null;
                 // var_dump('No new schema on operation: '.$operation->id);
@@ -108,8 +110,8 @@ class DataTransfer{
     /**
      * Execute the transfer apart from settling to new DB
      */
-    public static function transfer():bool{
-        self::createTables();
+    public static function transfer(bool $reset = false):bool{
+        self::createTables($reset);
         foreach(OperationManager::$operationList as $operation){
             if(self::$config['cli']){
                 echo 'Operation: '.$operation->id.' started... ';

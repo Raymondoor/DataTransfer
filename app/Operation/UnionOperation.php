@@ -17,11 +17,11 @@ class UnionOperation extends Operation{
     public function validateThenGenerateColumns():array{
         $diffOnPrevious = array_diff($this->previousOperation->tableConfig->columns,$this->unionOperation->tableConfig->columns);
         if($diffOnPrevious !== []){
-            throw new DataTransferException('Columns: '.implode(', ',$diffOnPrevious).'does not exist on the previous operation');
+            throw new \DataTransfer\Exception\DataTransferValueException('Columns: '.implode(', ',$diffOnPrevious).'does not exist on the previous operation');
         }
         $diffOnUnion = array_diff($this->unionOperation->tableConfig->columns,$this->previousOperation->tableConfig->columns);
         if($diffOnUnion !== []){
-            throw new DataTransferException('Columns: '.implode(', ',$diffOnUnion).'does not exist on the union operation');
+            throw new \DataTransfer\Exception\DataTransferValueException('Columns: '.implode(', ',$diffOnUnion).'does not exist on the union operation');
         }
         return $this->previousOperation->tableConfig->columns;
     }
