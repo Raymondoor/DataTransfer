@@ -14,8 +14,9 @@ users can define any string, where as id will be systematic, and restricted to u
 proccess interface class for basically defining. Then another query builder class that runs based on the proccess
 interface class for building the tables with the correct columns sest.
     do I need data type? cuz blobs and stuff may be hard to handle, in terms of performance. no constraints nor references tho.
+allow setting datatypes in settle??
 
-what to do on duplication in join? rename beforehand
+rename beforehand to avoid duplication in join opr.
 
 should be able to run even without the databases being present, modularization is needed. not just this, but the engine as well.
 
