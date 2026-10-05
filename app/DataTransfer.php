@@ -71,14 +71,13 @@ class DataTransfer{
         return OperationManager::boot();
     }
     /**
-     * Checks config validity and returns all schema that will be ran.
-     * @todo implement warning feat on src & target column if not used. catch exception, and report where gone wrong
-     * @todo style a bit
-     * @return ?array
+     * Checks config validity and reports errors and detailed relations of all operations.
+     * This has slight impact on Database as it may select the columns from the source and target DBs to validate the operations. Although it does not write any data.
+     * @todo implement warning feat on src & target column if not used. catch exception, and report where gone wrong. make relations diagram or smth Nd style a bit
      */
-    public static function analyze():?array{
+    public static function analyze():mixed{
         OperationManager::setAllTableConfiguration();
-        $query = [];
+        $maps = [];
         foreach(OperationManager::$operationList as $operation){
             $set = [];
             $reflection = new \ReflectionClass($operation::class);
@@ -88,17 +87,20 @@ class DataTransfer{
             if(is_null($operation->error)){
                 if($operation instanceof SettleOperation){
                     $set['create'] = null;
-                    // var_dump('No new schema on operation: '.$operation->id);
                 }else{
                     $set['create'] = $operation->tableConfig->creator->query;
                 }
                 $set['select'] = $operation->selectQueryFromPrevious();
                 $set['insert'] = $operation->tableConfig->inserter->query;
+            }else{
+                $set['create'] = null;
+                $set['select'] = null;
+                $set['insert'] = null;
             }
             $set['error'] = $operation->error;
-            $query[] = $set;
+            $maps[] = $set;
         }
-        return $query;
+        return $maps;
     }
     /**
      * Create all intermediate tables registered in operation. Is created in database set in `DataTransfer::setOperationalDB()`.
@@ -109,19 +111,22 @@ class DataTransfer{
         if($reset)OprDB::dropAllTables();
         foreach(OperationManager::$operationList as $operation){
             if($operation instanceof SettleOperation){
-            }else{
-                if(OprDB::exec($operation->tableConfig->creator->query) === false){
-                    throw new DataTransferException("Failed to create intermediate table: ".$operation->tableConfig->tablename);
-                }
+                continue;
+            }
+            if($operation->error !== null){
+                throw new DataTransferException("Cannot create table for operation: `".$operation->id."` due to error: \"".$operation->error['message']."\". Please check the configuration and fix the error before proceeding.");
+            }
+            if(OprDB::exec($operation->tableConfig->creator->query) === false){
+                throw new DataTransferException("Failed to create intermediate table: ".$operation->tableConfig->tablename);
             }
         }
         return true;
     }
     /**
-     * Execute the transfer apart from settling to new DB
+     * Execute the transfer apart from settling to new DB. This will create all new intermediate tables, and transfer the data from source to operational DB. Cannot run if there is no prior operation/transfer.
      */
-    public static function transfer(bool $reset = false):bool{
-        self::createTables($reset);
+    public static function transfer():bool{
+        self::createTables(true);
         foreach(OperationManager::$operationList as $operation){
             if(self::$config['cli']){
                 echo 'Operation: '.$operation->id.' started... ';
@@ -166,18 +171,17 @@ class DataTransfer{
                     echo 'settle completed.'.PHP_EOL;
                 }
             }
-            
         }
         return true;
     }
     /**
-     * Transfer and settle to new DB
-     * @todo not implemented yet
+     * Transfer and settle to new DB. Does all methods for transfering the data and settling to the new DB.
+     * Order is `self::createTables()`, `self::transfer()`, `self::settle()`.
+     * @todo not implemented yet correctly
      */
     public static function execute():bool{
-        foreach(OperationManager::$operationList as $operation){
-            // if instance of capture, use SrcDB, if instance of Settle, use TrgtDB
-        }
+        self::transfer(); // includes `self::createTables()`
+        self::settle();
         return true;
     }
 }

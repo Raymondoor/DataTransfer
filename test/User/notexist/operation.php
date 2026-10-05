@@ -11,7 +11,7 @@ DataTransfer::boot([
 // DataTransfer::setTargetDB('sqlite', __DIR__.'/databaseT.db');
 // DataTransfer::connectDBs();
 $opr = DataTransfer::operator();
-$usersOriginal = $opr::register(CaptureOperation::fromColumns('users', ['id', 'name', 'group']));
+$usersOriginal = $opr::register(CaptureOperation::fromColumns('users', ['id', 'name', 'group', ''])->setLabel('Capture users table'));
 $groupsExtracted = $opr::register(ExtractOperation::from($usersOriginal)->extract('group'));
 $distinctGroups = $opr::register(DistinctOperation::from($groupsExtracted)->distinct('group'));
 $renameAdjustGroups = $opr::register(RenameOperation::from($distinctGroups)->rename(['group' => 'group_name']));
@@ -38,5 +38,5 @@ $settleGroup = $opr::register(SettleOperation::from($groupsFinal)->settleColumns
 $settleUser = $opr::register(SettleOperation::from($usersFinal)->settleColumns('users', ['id', 'name', 'groups_id', 'created_at']));
 
 dump(DataTransfer::analyze());
-// DataTransfer::transfer(true);
+// DataTransfer::createTables(true);
 // DataTransfer::settle();

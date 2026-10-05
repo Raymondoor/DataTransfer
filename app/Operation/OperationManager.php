@@ -29,19 +29,22 @@ class OperationManager{
         return $operation;
     }
     public static function setAllTableConfiguration():void{
+        $rp = new ReflectionProperty(Operation::class, 'tableConfig');
         foreach(self::$operationList as $op){
-            $rp = new ReflectionProperty($op::class, 'tableConfig');
-            if(!$rp->isInitialized($op)){
-                try{
-                    $op->setTableConfiguration();
-                }catch(\Throwable $t){
-                    $op->setError([
-                        'message' => $t->getMessage(),
-                        'code' => $t->getCode(),
-                        'file' => $t->getFile(),
-                        'line' => $t->getLine(),
-                    ]);
+            if($rp->isInitialized($op)){
+                continue;
+            }
+            try{
+                if($op->previousOperation !== null && !$rp->isInitialized($op->previousOperation)){ // Root operations such as CaptureOperation have no previous operation (set to null).
+                    throw new DataTransferException("Cannot set table configuration for operation `".$op->id."`, previous operation's configuration (`".$op->previousOperation->id."`) is not initialized.");
                 }
+                $op->setTableConfiguration();
+            }catch(\Throwable $t){
+                $rc = new \ReflectionClass($t::class);
+                $op->setError([
+                    'type' => $rc->getShortName(),
+                    'message' => $t->getMessage(),
+                ]);
             }
         }
     }
