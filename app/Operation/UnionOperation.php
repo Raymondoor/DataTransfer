@@ -23,7 +23,7 @@ class UnionOperation extends Operation{
         return $this;
     }
     /**
-     * Says `from`, but is just an convention from other operations. there is no order in union
+     * Says `from`, but is just an convention from other operations. there is no traditional order in union
      * @param Operation $previousOperation first operation to union with
      */
     public static function from(Operation $previousOperation):self{
