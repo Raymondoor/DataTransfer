@@ -1,15 +1,17 @@
 <?php declare(strict_types=1);
-require_once __DIR__.'/../../vendor/autoload.php';
+require_once __DIR__.'/../../../vendor/autoload.php';
 use DataTransfer\DataTransfer;
 use DataTransfer\Operation\{AddColumnsOperation, CaptureOperation, DistinctOperation, ExtractOperation, JoinOperation, ModifyValuesOperation, RenameOperation, SettleOperation, UnionOperation};
 
-DataTransfer::boot();
-DataTransfer::setSourceDB('sqlite', __DIR__.'/databaseS.db');
-DataTransfer::setOperationalDB('sqlite', __DIR__.'/databaseO.db');
-DataTransfer::setTargetDB('sqlite', __DIR__.'/databaseT.db');
-DataTransfer::connectDBs();
+DataTransfer::boot([
+	'nodata' => true,
+]);
+// DataTransfer::setSourceDB('sqlite', __DIR__.'/databaseS.db');
+// DataTransfer::setOperationalDB('sqlite', __DIR__.'/databaseO.db');
+// DataTransfer::setTargetDB('sqlite', __DIR__.'/databaseT.db');
+// DataTransfer::connectDBs();
 $opr = DataTransfer::operator();
-$usersOriginal = $opr::register(CaptureOperation::fromTable('users'));
+$usersOriginal = $opr::register(CaptureOperation::fromColumns('users', ['id', 'name', 'group']));
 $groupsExtracted = $opr::register(ExtractOperation::from($usersOriginal)->extract('group'));
 $distinctGroups = $opr::register(DistinctOperation::from($groupsExtracted)->distinct('group'));
 $renameAdjustGroups = $opr::register(RenameOperation::from($distinctGroups)->rename(['group' => 'group_name']));
@@ -32,9 +34,9 @@ $groupsFinal = $opr::register(ModifyValuesOperation::from($groupsAddTimestamp)->
 		yield $record;
 	}
 }));
-$settleGroup = $opr::register(SettleOperation::from($groupsFinal)->settle('groups'));
-$settleUser = $opr::register(SettleOperation::from($usersFinal)->settle('users'));
+$settleGroup = $opr::register(SettleOperation::from($groupsFinal)->settleColumns('groups', ['id', 'name', 'created_at']));
+$settleUser = $opr::register(SettleOperation::from($usersFinal)->settleColumns('users', ['id', 'name', 'groups_id', 'created_at']));
 
 dump(DataTransfer::analyze());
-DataTransfer::transfer(true);
-DataTransfer::settle();
+// DataTransfer::transfer(true);
+// DataTransfer::settle();

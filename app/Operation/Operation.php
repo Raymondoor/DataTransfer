@@ -9,8 +9,13 @@ abstract class Operation{
     public ?string $label = null;
     public ?Operation $previousOperation = null;
     public TableConfiguration $tableConfig;
+    public ?array $error = null;
     public function setLabel(?string $label = null):self{
         $this->label = $label;
+        return $this;
+    }
+    public function setError(?array $errorPackage = null):self{
+        $this->error = $errorPackage;
         return $this;
     }
     /**

@@ -12,6 +12,9 @@ use DataTransfer\Util\DBQueryFormatter;
 class DataTransfer{
     public static array $config = [
         'cli' => true,
+        'nodata' => false,
+        'debug' => false,
+        'log' => false,
     ];
     public static bool $isSrcDBSet = false;
     public static bool $isOprDBSet = false;
@@ -60,6 +63,10 @@ class DataTransfer{
         OprDB::connect();
         TrgtDB::connect();
     }
+    /**
+     * 
+     * @return OperationManager Instance of OperationManager to register operations and manage the transfer process.
+     */
     public static function operator():OperationManager{
         return OperationManager::boot();
     }
@@ -78,14 +85,17 @@ class DataTransfer{
             $set['operation'] = $reflection->getShortName();
             $set['id'] = $operation->id;
             $set['label'] = $operation->label;
-            if($operation instanceof SettleOperation){
-                $set['create'] = null;
-                // var_dump('No new schema on operation: '.$operation->id);
-            }else{
-                $set['create'] = $operation->tableConfig->creator->query;
+            if(is_null($operation->error)){
+                if($operation instanceof SettleOperation){
+                    $set['create'] = null;
+                    // var_dump('No new schema on operation: '.$operation->id);
+                }else{
+                    $set['create'] = $operation->tableConfig->creator->query;
+                }
+                $set['select'] = $operation->selectQueryFromPrevious();
+                $set['insert'] = $operation->tableConfig->inserter->query;
             }
-            $set['select'] = $operation->selectQueryFromPrevious();
-            $set['insert'] = $operation->tableConfig->inserter->query;
+            $set['error'] = $operation->error;
             $query[] = $set;
         }
         return $query;

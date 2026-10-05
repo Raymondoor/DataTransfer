@@ -16,3 +16,7 @@ interface class for building the tables with the correct columns sest.
     do I need data type? cuz blobs and stuff may be hard to handle, in terms of performance. no constraints nor references tho.
 
 what to do on duplication in join? rename beforehand
+
+should be able to run even without the databases being present, modularization is needed. not just this, but the engine as well.
+
+on error, if one goes wrong it will chain with no-initialized atm because it never set the configs on the previous opr. it has to chain, but the error message should not be php default's "not initialized", but a proper one. Dunno if putting `$error` inside the operation is good or not either.

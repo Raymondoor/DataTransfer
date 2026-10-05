@@ -10,11 +10,7 @@ class OperationManager{
      */
     public static array $operationList = [];
     public static int $idCounter = 0;
-    /**
-     * array of data of operations that failed. includes operation id, label, error message
-     * @var array
-     */
-    public static array $failedConfigOperationsData = [];
+
     public static function boot():self{
         return new static();
     }
@@ -38,12 +34,13 @@ class OperationManager{
             if(!$rp->isInitialized($op)){
                 try{
                     $op->setTableConfiguration();
-                }catch(DataTransferValueException $dte){
-                    self::$failedConfigOperationsData[] = [
-                        'id' => $op->id,
-                        'label' => $op->label,
-                        'error' => $dte->getMessage()
-                    ];
+                }catch(\Throwable $t){
+                    $op->setError([
+                        'message' => $t->getMessage(),
+                        'code' => $t->getCode(),
+                        'file' => $t->getFile(),
+                        'line' => $t->getLine(),
+                    ]);
                 }
             }
         }

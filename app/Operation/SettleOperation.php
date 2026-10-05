@@ -7,6 +7,7 @@ use DataTransfer\Exception\DataTransferException;
  * Magic operation to treat target DB insert as a settlement operation. This operation will not generate any new columns, but will validate the existing columns and ensure that the data is settled correctly.
  */
 class SettleOperation extends Operation{
+    public bool $temporaryConfiguration = false;
     public string $table;
     public array $tableColumns;
     /**
@@ -25,6 +26,12 @@ class SettleOperation extends Operation{
         $this->table = $table;
         return $this;
     }
+    public function settleColumns(string $table, array|string $columns):self{
+        $this->temporaryConfiguration = true;
+        $this->table = $table;
+        $this->tableColumns = is_array($columns) ? $columns : [$columns];
+        return $this;
+    }
     public static function from(Operation $previousOperation):self{
         $o = new self();
         $o->id = OperationManager::generateId();
@@ -36,7 +43,9 @@ class SettleOperation extends Operation{
     }
     public function validateThenGenerateColumns():array{
         $columns = $this->previousOperation->tableConfig->columns;
-        $this->setColumnsFromTable();
+        if($this->temporaryConfiguration === false){
+            $this->setColumnsFromTable();
+        }
         $sourceColumns = $columns;
         $targetColumns = $this->tableColumns;
         sort($sourceColumns, SORT_STRING);
