@@ -5,9 +5,8 @@ use DataTransfer\Exception\DataTransferException;
 use DataTransfer\Database\OprDB;
 class InsertQueryBuilder{
     public string $query;
-    public TableConfiguration $config;
-    public function __construct(TableConfiguration $config){
-        $this->config = $config;
+    public function __construct(public TableConfiguration $config)
+    {
     }
     public function createQuery():void{
         $this->query = "INSERT INTO `".$this->config->tablename."` (";

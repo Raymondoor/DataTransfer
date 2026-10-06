@@ -15,8 +15,6 @@ class CaptureOperation extends Operation{
     }
     /**
      * Cannot be used if is a temporary configuration
-     * @param string $tablename
-     * @return CaptureOperation
      */
     public static function fromTable(string $tablename):self{
         $o = new self();
@@ -37,7 +35,7 @@ class CaptureOperation extends Operation{
         if(!$this->temporaryConfiguration){
             try{
                 SrcDB::select('SELECT count(*) FROM `'.$this->table.'` LIMIT 1');
-            }catch(\Exception $e){
+            }catch(\Exception){
                 throw new \DataTransfer\Exception\DataTransferValueException("Cannot capture from source table, table does not exist.");
             }
         }

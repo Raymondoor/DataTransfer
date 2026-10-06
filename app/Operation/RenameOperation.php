@@ -6,7 +6,6 @@ class RenameOperation extends Operation{
     /**
      * list of columns to rename `[oldName => newName]`
      * @param string[] $modifications
-     * @return self
      */
     public function rename(array $modifications):self{
         $this->modifications = $modifications;
@@ -27,7 +26,7 @@ class RenameOperation extends Operation{
             if(in_array($newName, $columns)){
                 throw new \DataTransfer\Exception\DataTransferValueException("Column $newName already exists in the original columns");
             }
-            $index = array_search($oldName, $columns);
+            $index = array_search($oldName, $columns, true);
             $columns[$index] = $newName;
         }
         return $columns;

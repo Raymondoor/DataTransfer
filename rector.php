@@ -8,9 +8,6 @@ use Rector\EarlyReturn\Rector\If_\RemoveAlwaysElseRector;
 return RectorConfig::configure()
     ->withPaths([
         __DIR__.'/app',
-        __DIR__.'/public',
-        __DIR__.'/resource',
-        __DIR__.'/test',
     ])
     ->withSkip([
         __DIR__.'/vendor',

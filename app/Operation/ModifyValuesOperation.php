@@ -5,7 +5,7 @@ namespace DataTransfer\Operation;
  * If a complex or contextual modification is needed, you can join other processes using `JoinOperation` and still won't break the system, since all operations are immutable.
  */
 class ModifyValuesOperation extends Operation{
-    public ?\Closure $modification;
+    public ?\Closure $modification = null;
     public string $jointColumn;
     public string $direction = 'left';
     /**
@@ -23,8 +23,7 @@ class ModifyValuesOperation extends Operation{
         return $o;
     }
     public function validateThenGenerateColumns():array{
-        $columns = $this->previousOperation->tableConfig->columns;
-        return $columns;
+        return $this->previousOperation->tableConfig->columns;
     }
     public function transform(iterable $data):iterable{
         $result = ($this->modification)($data);

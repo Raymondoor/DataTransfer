@@ -114,7 +114,7 @@ class DataTransfer{
                 continue;
             }
             if($operation->error !== null){
-                throw new DataTransferException("Cannot create table for operation: `".$operation->id."` due to error: \"".$operation->error['message']."\". Please check the configuration and fix the error before proceeding.");
+                throw new DataTransferException("Cannot create table for operation: `".$operation->id.'` due to error: "'.$operation->error['message'].'". Please check the configuration and fix the error before proceeding.');
             }
             if(OprDB::exec($operation->tableConfig->creator->query) === false){
                 throw new DataTransferException("Failed to create intermediate table: ".$operation->tableConfig->tablename);

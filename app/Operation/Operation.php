@@ -62,6 +62,6 @@ abstract class Operation{
     abstract public function transform(iterable $data):iterable;
     // abstract public function 
     public function getOperationName():string{
-        return (new \ReflectionClass($this))->getShortName();
+        return new \ReflectionClass($this)->getShortName();
     }
 }

@@ -94,7 +94,7 @@ abstract class Database{
 	}
 	public static function sanitizeSelectColumnsSqlite(string $table):array{
 		$raw = static::select("select name from pragma_table_info('".$table."')");
-		if(empty($raw)){
+		if($raw === []){
 			throw new DataTransferException("Table '$table' does not exist in the database.");
 		}
 		$sanitized = [];
@@ -106,7 +106,7 @@ abstract class Database{
 	public static function sanitizeSelectColumnsPgsql(string $table):array{
 		// @todo not tested yet
 		$raw = static::select("SELECT column_name FROM information_schema.columns WHERE table_name = '".$table."'");
-		if(empty($raw)){
+		if($raw === []){
 			throw new DataTransferException("Table '$table' does not exist in the database.");
 		}
 		$sanitized = [];
@@ -118,7 +118,7 @@ abstract class Database{
 	public static function sanitizeSelectColumnsMysql(string $table):array{
 		// @todo not tested yet
 		$raw = static::select("SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='".static::$name."' AND `TABLE_NAME`='".$table."'");
-		if(empty($raw)){
+		if($raw === []){
 			throw new DataTransferException("Table '$table' does not exist in the database.");
 		}
 		$sanitized = [];
@@ -128,10 +128,9 @@ abstract class Database{
 		return $sanitized;
 	}
 	/**
-	 * @todo not implemented yet
-	 * @return array
-	 */
-	public static function selectAllTables():array{
+     * @todo not implemented yet
+     */
+    public static function selectAllTables():array{
 		return match(static::$driver){
 			'sqlite' => static::sanitizeSelectTablesSqlite(),
 			'pgsql' => static::sanitizeSelectTablesPgsql(),

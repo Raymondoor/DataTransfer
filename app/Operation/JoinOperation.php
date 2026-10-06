@@ -28,12 +28,11 @@ class JoinOperation extends Operation{
     /**
      * Joining direction
      * @param 'left'|'inner'|'right'|'full'|'self' $direction
-     * @return void
      */
     public function direction(string $direction = 'LEFT'):self{
         // make sure direction is valid
         $validDirections = ['LEFT', 'INNER', 'RIGHT', 'FULL', 'SELF'];
-        if(!in_array(strtoupper($direction), $validDirections)){
+        if(!in_array(strtoupper($direction), $validDirections, true)){
             throw new DataTransferException("Invalid join direction '$direction'. Valid directions are: ".implode(', ', $validDirections));
         }
         $this->direction = strtoupper($direction);
@@ -46,8 +45,7 @@ class JoinOperation extends Operation{
         if(!$this->jointOperation::columnExists($this->jointOperation->tableConfig->columns, [$this->jointColumn])){
             throw new \DataTransfer\Exception\DataTransferValueException("Join target column does not exist");
         }
-        $columns = array_merge($this->previousOperation->tableConfig->columns, $this->jointOperation->tableConfig->columns);
-        return $columns;
+        return array_merge($this->previousOperation->tableConfig->columns, $this->jointOperation->tableConfig->columns);
     }
     public function selectQueryFromPrevious():string{
         return 'SELECT * FROM `'.$this->previousOperation->tableConfig->tablename.'` '.$this->direction.' JOIN `'.$this->jointOperation->tableConfig->tablename.'` ON `'.$this->previousOperation->tableConfig->tablename.'`.`'.$this->sourceColumn.'` = `'.$this->jointOperation->tableConfig->tablename.'`.`'.$this->jointColumn.'`';

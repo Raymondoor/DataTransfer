@@ -25,9 +25,7 @@ class ExtractOperation extends Operation{
         return $this->columns;
     }
     public function selectQueryFromPrevious():string{
-        $columns = array_map(function(string $col):string{
-            return '`'.$col.'`';
-        }, $this->tableConfig->columns);
+        $columns = array_map(fn(string $col): string => '`'.$col.'`', $this->tableConfig->columns);
         return 'SELECT '.implode(',', $columns).' FROM `'.$this->previousOperation->tableConfig->tablename.'`';
     }
     public function transform(iterable $data):iterable{
