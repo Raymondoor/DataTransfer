@@ -1,4 +1,5 @@
 <?php declare(strict_types=1);
+use Rector\CodeQuality\Rector\If_\CompleteMissingIfElseBracketRector;
 use Rector\Config\RectorConfig;
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\ClassLike\NewlineBetweenClassLikeStmtsRector;
@@ -8,6 +9,7 @@ use Rector\EarlyReturn\Rector\If_\RemoveAlwaysElseRector;
 return RectorConfig::configure()
     ->withPaths([
         __DIR__.'/app',
+        __DIR__.'/test',
     ])
     ->withSkip([
         __DIR__.'/vendor',
@@ -17,8 +19,9 @@ return RectorConfig::configure()
         NewlineAfterStatementRector::class,
         CatchExceptionNameMatchingTypeRector::class,
         RemoveAlwaysElseRector::class,
+        CompleteMissingIfElseBracketRector::class,
     ])
-    ->withPhpSets(php84:true)
+    ->withPhpSets(php85:true)
     ->withPreparedSets(
         codeQuality: true,
         codingStyle: true,

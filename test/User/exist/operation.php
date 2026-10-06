@@ -36,5 +36,5 @@ $settleGroup = $opr::register(SettleOperation::from($groupsFinal)->settle('group
 $settleUser = $opr::register(SettleOperation::from($usersFinal)->settle('users'));
 
 dump(DataTransfer::analyze());
-DataTransfer::transfer(true);
+DataTransfer::transfer();
 // DataTransfer::settle();
