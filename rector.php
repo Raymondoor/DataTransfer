@@ -21,7 +21,7 @@ return RectorConfig::configure()
         RemoveAlwaysElseRector::class,
         CompleteMissingIfElseBracketRector::class,
     ])
-    ->withPhpSets(php85:true)
+    ->withPhpSets(php84:true)
     ->withPreparedSets(
         codeQuality: true,
         codingStyle: true,
