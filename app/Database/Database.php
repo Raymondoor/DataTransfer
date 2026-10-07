@@ -4,6 +4,7 @@ namespace R3T\Database;
 use R3T\Exception\R3TException;
 /**
  * Static PDO wrapper to execute queries easily.
+ * @todo [2026.10.07 from:torhc17311@gmail.com to:self] fix how dsn is handled. socket, port, etc.
  */
 abstract class Database{
 	public static \PDO $connection;
