@@ -1,10 +1,10 @@
 {
     "name": "raymondoor/r3t",
     "description": "A PHP data migration tool.",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "type": "library",
     "keywords": ["R3T", "migration", "data", "transfer", "database", "sql"],
-    "time": "2026-10-02",
+    "time": "2026-10-07",
     "license": "GPL-3.0-or-later",
     "require": {
         "php": ">=8.4",
