@@ -9,9 +9,9 @@ class CreateTableQueryBuilder{
     {
     }
     public function createQuery():void{
-        $this->query = "CREATE TABLE IF NOT EXISTS `".$this->config->tablename."` (";
+        $this->query = 'CREATE TABLE IF NOT EXISTS "'.$this->config->tablename.'" (';
         foreach($this->config->columns as $column){
-            $this->query .= "`".$column."`,";
+            $this->query .= '"'.$column.'",';
         }
         $this->query = rtrim($this->query,",");
         $this->query .= ")";

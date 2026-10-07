@@ -36,12 +36,12 @@ class RenameOperation extends Operation{
         $selects = [];
         foreach($previous as $column){
             if(array_key_exists($column, $this->modifications)){
-                $selects[] = '`'.$column.'` AS `'.$this->modifications[$column].'`';
+                $selects[] = '"'.$column.'" AS "'.$this->modifications[$column].'"';
             }else{
-                $selects[] = '`'.$column.'`';
+                $selects[] = '"'.$column.'"';
             }
         }
-        return 'SELECT '.implode(',', $selects).' FROM `'.$this->previousOperation->tableConfig->tablename.'`';
+        return 'SELECT '.implode(',', $selects).' FROM "'.$this->previousOperation->tableConfig->tablename.'"';
     }
     public function transform(iterable $data):iterable{
         foreach($data as $row){

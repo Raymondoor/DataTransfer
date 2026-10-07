@@ -13,16 +13,16 @@ class DBQueryFormatter{
         return $returnArray;
     }
     /**
-     * Wraps each element in an array with backticks.
-     * ['foo'] becomes ['\`foo\`']
+     * Wraps each element in an array with double quotes.
+     * ['foo'] becomes ['"foo"']
      */
-    public static function wrapWithBackticks(iterable|string $data):iterable{
+    public static function wrapWithDoubleQuotes(iterable|string $data):iterable{
         if(is_string($data)){
             $data = [$data];
         }
         $returnArray = [];
         foreach($data as $column){
-            $returnArray[] = '`'.$column.'`';
+            $returnArray[] = '"'.$column.'"';
         }
         return $returnArray;
     }

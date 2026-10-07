@@ -1,5 +1,6 @@
 <?php declare(strict_types=1);
 namespace R3T\Operation;
+use R3T\Util\DBQueryFormatter;
 class ExtractOperation extends Operation{
     public array $columns;
     /**
@@ -25,8 +26,8 @@ class ExtractOperation extends Operation{
         return $this->columns;
     }
     public function selectQueryFromPrevious():string{
-        $columns = array_map(fn(string $col): string => '`'.$col.'`', $this->tableConfig->columns);
-        return 'SELECT '.implode(',', $columns).' FROM `'.$this->previousOperation->tableConfig->tablename.'`';
+        $columns = DBQueryFormatter::wrapWithDoubleQuotes($this->columns);
+        return 'SELECT '.implode(',', $columns).' FROM "'.$this->previousOperation->tableConfig->tablename.'"';
     }
     public function transform(iterable $data):iterable{
         foreach($data as $row){

@@ -48,7 +48,7 @@ class JoinOperation extends Operation{
         return array_merge($this->previousOperation->tableConfig->columns, $this->jointOperation->tableConfig->columns);
     }
     public function selectQueryFromPrevious():string{
-        return 'SELECT * FROM `'.$this->previousOperation->tableConfig->tablename.'` '.$this->direction.' JOIN `'.$this->jointOperation->tableConfig->tablename.'` ON `'.$this->previousOperation->tableConfig->tablename.'`.`'.$this->sourceColumn.'` = `'.$this->jointOperation->tableConfig->tablename.'`.`'.$this->jointColumn.'`';
+        return 'SELECT * FROM "'.$this->previousOperation->tableConfig->tablename.'" '.$this->direction.' JOIN "'.$this->jointOperation->tableConfig->tablename.'" ON "'.$this->previousOperation->tableConfig->tablename.'"."'.$this->sourceColumn.'"'.' = "'.$this->jointOperation->tableConfig->tablename.'"."'.$this->jointColumn.'"';
     }
     public function transform(iterable $data):iterable{
         foreach($data as $row){

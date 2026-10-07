@@ -55,8 +55,8 @@ class UnionOperation extends Operation{
         return $this->fromColumns;
     }
     public function selectQueryFromPrevious():string{
-        $fromColumns = DBQueryFormatter::wrapWithBackticks($this->fromColumns);
-        $unionColumns = DBQueryFormatter::wrapWithBackticks($this->unionColumns);
+        $fromColumns = DBQueryFormatter::wrapWithDoubleQuotes($this->fromColumns);
+        $unionColumns = DBQueryFormatter::wrapWithDoubleQuotes($this->unionColumns);
         return "SELECT ".implode(", ", $fromColumns)." FROM ".$this->previousOperation->tableConfig->tablename." UNION".($this->unionAll ? " ALL" : '')." SELECT ".implode(", ", $unionColumns)." FROM ".$this->unionOperation->tableConfig->tablename;
     }
     public function transform(iterable $data):iterable{

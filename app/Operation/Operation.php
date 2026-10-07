@@ -52,7 +52,7 @@ abstract class Operation{
      * @return string the query string to select data.
      */
     public function selectQueryFromPrevious():string{
-        return 'SELECT * FROM `'.$this->previousOperation->tableConfig->tablename.'`';
+        return 'SELECT * FROM "'.$this->previousOperation->tableConfig->tablename.'"';
     }
     /**
      * Result data after transformation. It has to match the format

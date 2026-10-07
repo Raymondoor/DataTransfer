@@ -20,7 +20,6 @@ class CaptureOperation extends Operation{
         $o = new self();
         $o->id = OperationManager::generateId();
         $o->capture($tablename);
-        $o->tableColumns = SrcDB::selectColumns($o->table);
         return $o;
     }
     public static function fromColumns(string $tablename, array $columns):self{
@@ -34,15 +33,16 @@ class CaptureOperation extends Operation{
     public function validateThenGenerateColumns():array{
         if(!$this->temporaryConfiguration){
             try{
-                SrcDB::select('SELECT count(*) FROM `'.$this->table.'` LIMIT 1');
-            }catch(\Exception){
-                throw new \R3T\Exception\R3TValueException("Cannot capture from source table, table does not exist.");
+                $this->tableColumns = SrcDB::selectColumns($this->table);
+                SrcDB::select('SELECT count(*) FROM "'.$this->table.'" LIMIT 1');
+            }catch(\Exception $e){
+                throw new \R3T\Exception\R3TValueException("Cannot capture from source table, table does not exist.: ".$e->getMessage());
             }
         }
         return $this->tableColumns;
     }
     public function selectQueryFromPrevious():string{
-        return 'SELECT * FROM `'.$this->table.'`';
+        return 'SELECT * FROM "'.$this->table.'"';
     }
     public function transform(iterable $data):iterable{
         foreach($data as $row){

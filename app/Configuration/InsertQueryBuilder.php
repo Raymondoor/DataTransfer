@@ -9,9 +9,9 @@ class InsertQueryBuilder{
     {
     }
     public function createQuery():void{
-        $this->query = "INSERT INTO `".$this->config->tablename."` (";
+        $this->query = 'INSERT INTO "'.$this->config->tablename.'" (';
         foreach($this->config->columns as $column){
-            $this->query .= "`".$column."`,";
+            $this->query .= '"'.$column.'",';
         }
         $this->query = rtrim($this->query,",");
         $this->query .= ") VALUES (";
