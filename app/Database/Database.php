@@ -152,6 +152,13 @@ abstract class Database{
 	}
 	public static function sanitizeSelectTablessMysql():array{
 		// @todo not implemented yet
+		$raw = static::select("SHOW TABLES");
+		var_dump($raw);
+		$sanitized = [];
+		// foreach($raw as $table){
+		// 	$sanitized[] = $table['name'];
+		// }
+		return $sanitized;
 		return [];
 	}
 }
