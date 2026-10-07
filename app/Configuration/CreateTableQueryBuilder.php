@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Configuration;
-use DataTransfer\Configuration\TableConfiguration;
-use DataTransfer\Exception\DataTransferException;
-use DataTransfer\Database\OprDB;
+namespace R3T\Configuration;
+use R3T\Configuration\TableConfiguration;
+use R3T\Exception\R3TException;
+use R3T\Database\OprDB;
 class CreateTableQueryBuilder{
     public string $query;
     public function __construct(public TableConfiguration $config)

@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Operation;
+namespace R3T\Operation;
 
-use DataTransfer\Exception\DataTransferException;
+use R3T\Exception\R3TException;
 class JoinOperation extends Operation{
     public Operation $jointOperation;
     public string $jointColumn;
@@ -33,17 +33,17 @@ class JoinOperation extends Operation{
         // make sure direction is valid
         $validDirections = ['LEFT', 'INNER', 'RIGHT', 'FULL', 'SELF'];
         if(!in_array(strtoupper($direction), $validDirections, true)){
-            throw new DataTransferException("Invalid join direction '$direction'. Valid directions are: ".implode(', ', $validDirections));
+            throw new R3TException("Invalid join direction '$direction'. Valid directions are: ".implode(', ', $validDirections));
         }
         $this->direction = strtoupper($direction);
         return $this;
     }
     public function validateThenGenerateColumns():array{
         if(!$this->previousOperation::columnExists($this->previousOperation->tableConfig->columns, [$this->sourceColumn])){
-            throw new \DataTransfer\Exception\DataTransferValueException("Join source column does not exist");
+            throw new \R3T\Exception\R3TValueException("Join source column does not exist");
         }
         if(!$this->jointOperation::columnExists($this->jointOperation->tableConfig->columns, [$this->jointColumn])){
-            throw new \DataTransfer\Exception\DataTransferValueException("Join target column does not exist");
+            throw new \R3T\Exception\R3TValueException("Join target column does not exist");
         }
         return array_merge($this->previousOperation->tableConfig->columns, $this->jointOperation->tableConfig->columns);
     }

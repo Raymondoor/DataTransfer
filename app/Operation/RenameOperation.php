@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Operation;
-use DataTransfer\Exception\DataTransferException;
+namespace R3T\Operation;
+use R3T\Exception\R3TException;
 class RenameOperation extends Operation{
     public array $modifications;
     /**
@@ -21,10 +21,10 @@ class RenameOperation extends Operation{
         $columns = $this->previousOperation->tableConfig->columns;
         foreach($this->modifications as $oldName => $newName){
             if(!in_array($oldName, $columns)){
-                throw new \DataTransfer\Exception\DataTransferValueException("Column $oldName does not exist in the original columns");
+                throw new \R3T\Exception\R3TValueException("Column $oldName does not exist in the original columns");
             }
             if(in_array($newName, $columns)){
-                throw new \DataTransfer\Exception\DataTransferValueException("Column $newName already exists in the original columns");
+                throw new \R3T\Exception\R3TValueException("Column $newName already exists in the original columns");
             }
             $index = array_search($oldName, $columns, true);
             $columns[$index] = $newName;

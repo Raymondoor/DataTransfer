@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Database;
+namespace R3T\Database;
 
-use DataTransfer\Exception\DataTransferException;
+use R3T\Exception\R3TException;
 /**
  * Static PDO wrapper to execute queries easily.
  */
@@ -89,13 +89,13 @@ abstract class Database{
 			'sqlite' => static::sanitizeSelectColumnsSqlite($table),
 			'pgsql' => static::sanitizeSelectColumnsPgsql($table),
 			'mysql' => static::sanitizeSelectColumnsMysql($table),
-			default => throw new DataTransferException('wrong driver?')
+			default => throw new R3TException('wrong driver?')
 		};
 	}
 	public static function sanitizeSelectColumnsSqlite(string $table):array{
 		$raw = static::select("select name from pragma_table_info('".$table."')");
 		if($raw === []){
-			throw new DataTransferException("Table '$table' does not exist in the database.");
+			throw new R3TException("Table '$table' does not exist in the database.");
 		}
 		$sanitized = [];
 		foreach($raw as $column){
@@ -107,7 +107,7 @@ abstract class Database{
 		// @todo not tested yet
 		$raw = static::select("SELECT column_name FROM information_schema.columns WHERE table_name = '".$table."'");
 		if($raw === []){
-			throw new DataTransferException("Table '$table' does not exist in the database.");
+			throw new R3TException("Table '$table' does not exist in the database.");
 		}
 		$sanitized = [];
 		foreach($raw as $column){
@@ -119,7 +119,7 @@ abstract class Database{
 		// @todo not tested yet
 		$raw = static::select("SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='".static::$name."' AND `TABLE_NAME`='".$table."'");
 		if($raw === []){
-			throw new DataTransferException("Table '$table' does not exist in the database.");
+			throw new R3TException("Table '$table' does not exist in the database.");
 		}
 		$sanitized = [];
 		foreach($raw as $column){
@@ -135,7 +135,7 @@ abstract class Database{
 			'sqlite' => static::sanitizeSelectTablesSqlite(),
 			'pgsql' => static::sanitizeSelectTablesPgsql(),
 			'mysql' => static::sanitizeSelectTablessMysql(),
-			default => throw new DataTransferException('wrong driver?')
+			default => throw new R3TException('wrong driver?')
 		};
 	}
 	public static function sanitizeSelectTablesSqlite():array{

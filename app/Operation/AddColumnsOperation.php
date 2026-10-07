@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Operation;
+namespace R3T\Operation;
 /**
  * Add new columns to schema, the values inside will default to null
  */
@@ -19,7 +19,7 @@ class AddColumnsOperation extends Operation{
         $columns = $this->previousOperation->tableConfig->columns;
         $existingColumn = self::columnExists($this->columns, $columns); 
         if($existingColumn !== false){
-            throw new \DataTransfer\Exception\DataTransferValueException("Column '$existingColumn' already exists in the table.");
+            throw new \R3T\Exception\R3TValueException("Column '$existingColumn' already exists in the table.");
         }
         array_push($columns, ...$this->columns);
         return $columns;

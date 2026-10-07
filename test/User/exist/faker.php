@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 require_once __DIR__.'/../../../vendor/autoload.php';
 
-use DataTransfer\Database\SrcDB;
+use R3T\Database\SrcDB;
 
 $faker = \Faker\Factory::create();
 SrcDB::$driver = 'sqlite';

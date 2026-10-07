@@ -1,8 +1,8 @@
 # Operations
-Operations serve the core of DataTransfer, in terms of how the data should be transfered to another stage.
+Operations serve the core of R3T, in terms of how the data should be transfered to another stage.
 
 ## Operation Class
-The `\DataTransfer\Operation\Operation` class is ... then extended ... users can implement their own ... 
+The `\R3T\Operation\Operation` class is ... then extended ... users can implement their own ... 
 
 ## What Each Operations Do
 

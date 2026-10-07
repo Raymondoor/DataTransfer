@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Operation;
-use DataTransfer\Configuration\TableConfiguration;
+namespace R3T\Operation;
+use R3T\Configuration\TableConfiguration;
 abstract class Operation{
     public string $id;
     /**
@@ -29,7 +29,7 @@ abstract class Operation{
     /**
      * As it says, validates if the relation is correct or not based on the original columns, then returns the newly generated columns list
      * @return string[] returns the newly generated columns list.
-     * @throws \DataTransfer\Exception\DataTransferValueException;
+     * @throws \R3T\Exception\R3TValueException;
      */
     abstract public function validateThenGenerateColumns():array;
     /**

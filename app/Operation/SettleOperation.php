@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Operation;
-use DataTransfer\Database\TrgtDB;
-use DataTransfer\Configuration\TableConfiguration;
-use DataTransfer\Exception\DataTransferException;
+namespace R3T\Operation;
+use R3T\Database\TrgtDB;
+use R3T\Configuration\TableConfiguration;
+use R3T\Exception\R3TException;
 /**
  * Magic operation to treat target DB insert as a settlement operation. This operation will not generate any new columns, but will validate the existing columns and ensure that the data is settled correctly.
  */
@@ -51,7 +51,7 @@ class SettleOperation extends Operation{
         sort($sourceColumns, SORT_STRING);
         sort($targetColumns, SORT_STRING);
         if($sourceColumns !== $targetColumns){
-            throw new \DataTransfer\Exception\DataTransferValueException("Cannot settle to target table, column names seems to not match.");
+            throw new \R3T\Exception\R3TValueException("Cannot settle to target table, column names seems to not match.");
         }
         return $this->tableColumns;
     }

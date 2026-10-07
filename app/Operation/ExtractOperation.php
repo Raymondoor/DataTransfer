@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Operation;
+namespace R3T\Operation;
 class ExtractOperation extends Operation{
     public array $columns;
     /**
@@ -19,7 +19,7 @@ class ExtractOperation extends Operation{
         $columns = $this->previousOperation->tableConfig->columns;
         foreach($this->columns as $column){
             if(self::columnExists($columns, [$column]) === false){
-                throw new \DataTransfer\Exception\DataTransferValueException("Column '$column' does not exist in the table.");
+                throw new \R3T\Exception\R3TValueException("Column '$column' does not exist in the table.");
             }
         }
         return $this->columns;

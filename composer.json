@@ -1,9 +1,9 @@
 {
-    "name": "raymondoor/datatransfer",
+    "name": "raymondoor/r3t",
     "description": "A PHP data migration tool.",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "type": "library",
-    "keywords": ["Datatransfer", "migration"],
+    "keywords": ["R3T", "migration", "data", "transfer", "database", "sql"],
     "time": "2026-10-02",
     "license": "GPL-3.0-or-later",
     "require": {
@@ -12,7 +12,7 @@
     },
     "autoload": {
         "psr-4": {
-            "DataTransfer\\": "app/"
+            "R3T\\": "app/"
         }
     },
     "require-dev": {
@@ -24,7 +24,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "DataTransfer\\Test\\Unit\\": "test/Unit/"
+            "R3T\\Test\\Unit\\": "test/Unit/"
         }
     }
 }

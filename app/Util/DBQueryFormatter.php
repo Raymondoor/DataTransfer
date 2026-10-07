@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Util;
+namespace R3T\Util;
 class DBQueryFormatter{
     /**
      * Adds a `:` in front of the key of parameters for a `:foo` style prepared statement.

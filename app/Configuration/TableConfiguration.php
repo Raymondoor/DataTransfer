@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Configuration;
+namespace R3T\Configuration;
 /**
  * This manages the intermediate tables in sql, not the configuration itself, so it won't have relations
  */

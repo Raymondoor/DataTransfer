@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Operation;
+namespace R3T\Operation;
 
 use ReflectionProperty;
-use DataTransfer\Exception\{DataTransferException, DataTransferValueException};
+use R3T\Exception\{R3TException, R3TValueException};
 
 class OperationManager{
     /**
@@ -36,7 +36,7 @@ class OperationManager{
             }
             try{
                 if($op->previousOperation !== null && !$rp->isInitialized($op->previousOperation)){ // Root operations such as CaptureOperation have no previous operation (set to null).
-                    throw new DataTransferException("Cannot set table configuration for operation `".$op->id."`, previous operation's configuration (`".$op->previousOperation->id."`) is not initialized.");
+                    throw new R3TException("Cannot set table configuration for operation `".$op->id."`, previous operation's configuration (`".$op->previousOperation->id."`) is not initialized.");
                 }
                 $op->setTableConfiguration();
             }catch(\Throwable $t){

@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 require_once __DIR__.'/../../../vendor/autoload.php';
-use DataTransfer\DataTransfer;
-use DataTransfer\Operation\{AddColumnsOperation, CaptureOperation, DistinctOperation, ExtractOperation, JoinOperation, ModifyValuesOperation, RenameOperation, SettleOperation, UnionOperation};
+use R3T\R3T;
+use R3T\Operation\{AddColumnsOperation, CaptureOperation, DistinctOperation, ExtractOperation, JoinOperation, ModifyValuesOperation, RenameOperation, SettleOperation, UnionOperation};
 
-DataTransfer::boot([
+R3T::boot([
 	'nodata' => true,
 ]);
-// DataTransfer::setSourceDB('sqlite', __DIR__.'/databaseS.db');
-// DataTransfer::setOperationalDB('sqlite', __DIR__.'/databaseO.db');
-// DataTransfer::setTargetDB('sqlite', __DIR__.'/databaseT.db');
-// DataTransfer::connectDBs();
-$opr = DataTransfer::operator();
+// R3T::setSourceDB('sqlite', __DIR__.'/databaseS.db');
+// R3T::setOperationalDB('sqlite', __DIR__.'/databaseO.db');
+// R3T::setTargetDB('sqlite', __DIR__.'/databaseT.db');
+// R3T::connectDBs();
+$opr = R3T::operator();
 $usersOriginal = $opr::register(CaptureOperation::fromColumns('users', ['id', 'name', 'group', ''])->setLabel('Capture users table'));
 $groupsExtracted = $opr::register(ExtractOperation::from($usersOriginal)->extract('group'));
 $distinctGroups = $opr::register(DistinctOperation::from($groupsExtracted)->distinct('group'));
@@ -37,6 +37,6 @@ $groupsFinal = $opr::register(ModifyValuesOperation::from($groupsAddTimestamp)->
 $settleGroup = $opr::register(SettleOperation::from($groupsFinal)->settleColumns('groups', ['id', 'name', 'created_at']));
 $settleUser = $opr::register(SettleOperation::from($usersFinal)->settleColumns('users', ['id', 'name', 'groups_id', 'created_at']));
 
-dump(DataTransfer::analyze());
-// DataTransfer::createTables(true);
-// DataTransfer::settle();
+dump(R3T::analyze());
+// R3T::createTables(true);
+// R3T::settle();

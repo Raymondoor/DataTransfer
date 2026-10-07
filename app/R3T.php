@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
-namespace DataTransfer;
+namespace R3T;
 
-use DataTransfer\Database\SrcDB;
-use DataTransfer\Database\OprDB;
-use DataTransfer\Database\TrgtDB;
-use DataTransfer\Exception\DataTransferException;
-use DataTransfer\Operation\CaptureOperation;
-use DataTransfer\Operation\SettleOperation;
-use DataTransfer\Operation\OperationManager;
-use DataTransfer\Util\DBQueryFormatter;
-class DataTransfer{
+use R3T\Database\SrcDB;
+use R3T\Database\OprDB;
+use R3T\Database\TrgtDB;
+use R3T\Exception\R3TException;
+use R3T\Operation\CaptureOperation;
+use R3T\Operation\SettleOperation;
+use R3T\Operation\OperationManager;
+use R3T\Util\DBQueryFormatter;
+class R3T{
     public static array $config = [
         'cli' => true,
         'nodata' => false,
@@ -51,13 +51,13 @@ class DataTransfer{
     }
     public static function connectDBs():void{
         if(!self::$isSrcDBSet){
-            throw new DataTransferException("Source DB is not set.");
+            throw new R3TException("Source DB is not set.");
         }
         if(!self::$isOprDBSet){
-            throw new DataTransferException("Operational DB is not set.");
+            throw new R3TException("Operational DB is not set.");
         }
         if(!self::$isTrgtDBSet){
-            throw new DataTransferException("Target DB is not set.");
+            throw new R3TException("Target DB is not set.");
         }
         SrcDB::connect();
         OprDB::connect();
@@ -103,7 +103,7 @@ class DataTransfer{
         return $maps;
     }
     /**
-     * Create all intermediate tables registered in operation. Is created in database set in `DataTransfer::setOperationalDB()`.
+     * Create all intermediate tables registered in operation. Is created in database set in `R3T::setOperationalDB()`.
      * @param bool $reset `true` deletes all existing tables inside operational DB. Useful when re-running many times to test the configuration.
      */
     public static function createTables(bool $reset = false):bool{
@@ -114,10 +114,10 @@ class DataTransfer{
                 continue;
             }
             if($operation->error !== null){
-                throw new DataTransferException("Cannot create table for operation: `".$operation->id.'` due to error: "'.$operation->error['message'].'". Please check the configuration and fix the error before proceeding.');
+                throw new R3TException("Cannot create table for operation: `".$operation->id.'` due to error: "'.$operation->error['message'].'". Please check the configuration and fix the error before proceeding.');
             }
             if(OprDB::exec($operation->tableConfig->creator->query) === false){
-                throw new DataTransferException("Failed to create intermediate table: ".$operation->tableConfig->tablename);
+                throw new R3TException("Failed to create intermediate table: ".$operation->tableConfig->tablename);
             }
         }
         return true;

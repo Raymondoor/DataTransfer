@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Operation;
+namespace R3T\Operation;
 
-use DataTransfer\Database\SrcDB;
+use R3T\Database\SrcDB;
 /**
  * Magic operation to treat source DB as a previous operation. This operation will replicate the source DB table to a new stage ensuring the modification does not happen in source.
  */
@@ -36,7 +36,7 @@ class CaptureOperation extends Operation{
             try{
                 SrcDB::select('SELECT count(*) FROM `'.$this->table.'` LIMIT 1');
             }catch(\Exception){
-                throw new \DataTransfer\Exception\DataTransferValueException("Cannot capture from source table, table does not exist.");
+                throw new \R3T\Exception\R3TValueException("Cannot capture from source table, table does not exist.");
             }
         }
         return $this->tableColumns;

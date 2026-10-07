@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Database;
+namespace R3T\Database;
 /**
  * Static PDO wrapper to execute queries easily.
  */

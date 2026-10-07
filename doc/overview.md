@@ -1,6 +1,6 @@
 # Project Overview
 
-DataTransfer is a PHP tool for describing database migrations as an ordered sequence of data operations. Its goal is to make migrations that reshape data easier to organize: instead of treating a migration as a single copy from one database to another, a user can describe intermediate datasets and how they lead to the destination.
+R3T is a PHP tool for describing database migrations as an ordered sequence of data operations. Its goal is to make migrations that reshape data easier to organize: instead of treating a migration as a single copy from one database to another, a user can describe intermediate datasets and how they lead to the destination.
 
 This tool is currently a work in progress. This page describes the project's purpose and architecture, not a complete usage guide.
 
@@ -16,7 +16,7 @@ The intended workflow is to configure these databases, register a sequence of op
 
 ## Main Components
 
-- **DataTransfer** provides the static entry point for configuring database roles, accessing the operation manager, analyzing the registered plan, and preparing intermediate tables.
+- **R3T** provides the static entry point for configuring database roles, accessing the operation manager, analyzing the registered plan, and preparing intermediate tables.
 - **OperationManager** keeps the registered sequence and initializes the table configuration associated with each operation.
 - **Operations** describe the stages of a migration. A shared base class supplies common behavior for validating column relationships, defining intermediate output, and selecting input from a preceding stage.
 - **Database adapters** provide PDO connections and query helpers for the source, operational, and target roles.

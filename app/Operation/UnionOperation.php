@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Operation;
+namespace R3T\Operation;
 
-use DataTransfer\Exception\DataTransferException;
-use DataTransfer\Util\DBQueryFormatter;
+use R3T\Exception\R3TException;
+use R3T\Util\DBQueryFormatter;
 /**
  * @todo not tested yet
  */
@@ -43,14 +43,14 @@ class UnionOperation extends Operation{
     public function validateThenGenerateColumns():array{
         // on both operations, check if the columns exist, and if not, throw an exception
         if(self::columnExists($this->previousOperation->tableConfig->columns, $this->fromColumns) === false){
-            throw new DataTransferException("Some columns in the first operation do not exist in the table.");
+            throw new R3TException("Some columns in the first operation do not exist in the table.");
         }
         if(self::columnExists($this->unionOperation->tableConfig->columns, $this->unionColumns) === false){
-            throw new DataTransferException("Some columns in the second operation do not exist in the table.");
+            throw new R3TException("Some columns in the second operation do not exist in the table.");
         }
         // check if the number of columns is the same
         if(count($this->fromColumns) !== count($this->unionColumns)){
-            throw new DataTransferException("The number of columns in the first operation does not match the number of columns in the second operation.");
+            throw new R3TException("The number of columns in the first operation does not match the number of columns in the second operation.");
         }
         return $this->fromColumns;
     }

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Database;
-use DataTransfer\Exception\DataTransferException;
+namespace R3T\Database;
+use R3T\Exception\R3TException;
 /**
  * Static PDO wrapper to execute queries easily.
  */

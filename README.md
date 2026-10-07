@@ -1,12 +1,12 @@
-# DataTransfer
-A PHP data migration tool.
+# R3T
+A relational data transformation and transfer tool.
 
 ## Overview
 A PHP tool for describing and preparing database migrations as a sequence of data operations. It separates the source, an operational staging database, and the destination so that migration work can be organized and inspected before it is applied.
 
 ## Installation
 ```sh
-composer require raymondoor/datatransfer
+composer require raymondoor/r3t
 ```
 
 ## Usage
@@ -17,16 +17,16 @@ The example illustrates the intended migration flow.
 2. The target database will have two tables `users` and `groups` table with [id, name, groups_id, created_at] and [id, name, created_at] respectively.
 
 ```php
-use DataTransfer\DataTransfer;
-use DataTransfer\Operation\{AddColumnsOperation, CaptureOperation, DistinctOperation, ExtractOperation, JoinOperation, ModifyValuesOperation, RenameOperation, SettleOperation, UnionOperation};
+use R3T\R3T;
+use R3T\Operation\{AddColumnsOperation, CaptureOperation, DistinctOperation, ExtractOperation, JoinOperation, ModifyValuesOperation, RenameOperation, SettleOperation, UnionOperation};
 
-DataTransfer::boot();
-DataTransfer::setSourceDB('sqlite', '/path/to/db.sqlite'); // original
-DataTransfer::setOperationalDB('sqlite', '/path/to/temp/db.sqlite'); // transactional DB
-DataTransfer::setTargetDB('mysql','host','dbname','user','pass'); // target database
-DataTransfer::connectDBs(); // establish PDO connection
+R3T::boot();
+R3T::setSourceDB('sqlite', '/path/to/db.sqlite'); // original
+R3T::setOperationalDB('sqlite', '/path/to/temp/db.sqlite'); // transactional DB
+R3T::setTargetDB('mysql','host','dbname','user','pass'); // target database
+R3T::connectDBs(); // establish PDO connection
 
-$opr = DataTransfer::operator(); // returns OperationManager
+$opr = R3T::operator(); // returns OperationManager
 $usersOriginal = $opr::register(CaptureOperation::fromTable('users')); // eg. consists of [id, name, group, created_at]
 
 $groupsExtracted = $opr::register(ExtractOperation::from($usersOriginal)->extract('group'));
@@ -58,13 +58,13 @@ $groupsFinal = $opr::register(ModifyValuesOperation::from($groupsAddTimestamp)->
 $settleGroup = $opr::register(SettleOperation::from($groupsFinal)->settle('groups')); // table and column name must match target
 $settleUser = $opr::register(SettleOperation::from($usersFinal)->settle('users')); // settle after groups to respect foreign key constraints
 
-var_dump(DataTransfer::analyze()); // array of operations' query
-DataTransfer::createTables(true); // creates intermediate tables. does not touch actual data yet.
-DataTransfer::transfer(); // execute the transfer apart from settling to new DB
-DataTransfer::settle(); // finalize the transfer and insert to the new DB.
+var_dump(R3T::analyze()); // array of operations' query
+R3T::createTables(true); // creates intermediate tables. does not touch actual data yet.
+R3T::transfer(); // execute the transfer apart from settling to new DB
+R3T::settle(); // finalize the transfer and insert to the new DB.
 ```
 
-## Why DataTransfer?
+## Why R3T?
 
 ### Make complicated migrations manageable
 
@@ -72,7 +72,7 @@ Database migrations can become difficult when the destination is not simply a ne
 
 A schema may need to be split apart, combined, reorganized, or have its data represented differently. What starts as a few schema changes can quickly become a complicated chain of data transformations.
 
-DataTransfer takes a different approach:
+R3T takes a different approach:
 
 > **Break the complicated migration into simple transformations.**
 
@@ -102,7 +102,7 @@ Complexity is only half of the problem.
 
 A migration that works today can still become difficult to understand, inspect, or change later.
 
-DataTransfer is designed around **immutable operations**. A transformation does not silently alter the result of an earlier transformation. Instead, each operation produces a new result that can become the basis for subsequent work.
+R3T is designed around **immutable operations**. A transformation does not silently alter the result of an earlier transformation. Instead, each operation produces a new result that can become the basis for subsequent work.
 
 That gives the migration a history.
 

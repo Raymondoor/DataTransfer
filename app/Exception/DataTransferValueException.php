@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Exception;
-class DataTransferValueException extends DataTransferException{
+namespace R3T\Exception;
+class R3TValueException extends R3TException{
 	
 }

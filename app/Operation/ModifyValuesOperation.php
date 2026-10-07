@@ -1,5 +1,5 @@
 <?php declare(strict_types=1);
-namespace DataTransfer\Operation;
+namespace R3T\Operation;
 /**
  * Modify values of a table by iterating each rows.
  * If a complex or contextual modification is needed, you can join other processes using `JoinOperation` and still won't break the system, since all operations are immutable.
