@@ -7,7 +7,7 @@ The `\R3T\Operation\Operation` class is ... then extended ... users can implemen
 ## What Each Operations Do
 
 ### {Each predefined operations}
-
+### {Capture and Settle} ... see [[Magic]]
 ## Magic Operation
 capture and settle ... details ... extend those, not the root operation if you want do those bits ...
 
