@@ -1,6 +1,6 @@
 # Operations
 
-Operations are the core of R3T. It defines how data is transformed as it moves through R3T. Each operation produces a result that can be used by subsequent operations, allowing a migration to be composed from smaller steps.
+Operations are the core of R3T. It defines how data is transformed as it moves through the trasnfer process. Each operation produces a result that can be used by subsequent operations, allowing a migration to be composed from smaller steps.
 
 ## Operation Class
 
