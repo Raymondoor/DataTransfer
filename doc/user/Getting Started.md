@@ -8,7 +8,7 @@ Welcome to the docs of **R3T**, and thank you for showing interest to it!
 
 You register a sequence of operations to the R3T operation manager, and execute the php script.
 
-Then you are done! All your data from the old DB is now correctly inserted into the new DB.
+Then you are all done! All your data from the old DB is now correctly inserted into the new DB.
 
 ## Install
 
@@ -35,6 +35,10 @@ use R3T\R3T;
 
 that's it!
 
-## Basic Usage
+## Why R3T?
 
-The very least you can do with this is to `Capture` and `Settle`.
+Database migrations can become difficult to maintain when the source and target have different structures or when data must be combined and transformed along the way. A collection of procedural scripts can quickly become difficult to understand as these requirements grow.
+
+**R3T approaches migrations as compositions of operations.** Instead of writing one large script that handles everything, you define smaller operations that transform data step by step before transferring it to the target database.
+
+This makes complex data migrations easier to organize, understand, and maintain.
