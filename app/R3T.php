@@ -150,6 +150,13 @@ class R3T{
         return true;
     }
     /**
+     * Alias for `self::transfer()`. 
+     * @todo [2026/10/09 from:torhc17311@gmail.com to:@all] The terminology is not quite set yet, decide which naming is better.
+     */
+    public static function transform():bool{
+        return self::transfer();
+    }
+    /**
      * Finalize the transfer and insert to the new DB. Cannot run if there is no prior operation/transfer.
      * @todo implement warning if data already exists in target before running
      */
