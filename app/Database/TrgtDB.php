@@ -6,8 +6,7 @@ namespace R3T\Database;
 class TrgtDB extends Database{
 	public static \PDO $connection;
 	public static string $driver;
-	public static string $host;
-	public static string $name;
+	public static string $dsn;
 	public static string $user;
 	public static string $pass;
 	public static array $options = [

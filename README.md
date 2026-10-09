@@ -15,6 +15,7 @@ The example illustrates the intended migration flow.
 ### Prerequisites
 1. The source database has `users` table with columns [id, name, group, created_at].
 2. The target database will have two tables `users` and `groups` table with [id, name, groups_id, created_at] and [id, name, created_at] respectively.
+3. "I" want to extract the groups to a separate table and instead reference them in users table by id.
 
 ```php
 use R3T\R3T;
@@ -23,7 +24,7 @@ use R3T\Operation\{AddColumnsOperation, CaptureOperation, DistinctOperation, Ext
 R3T::boot();
 R3T::setSourceDB('sqlite', '/path/to/db.sqlite'); // original
 R3T::setOperationalDB('sqlite', '/path/to/temp/db.sqlite'); // transactional DB
-R3T::setTargetDB('mysql','host','dbname','user','pass'); // target database
+R3T::setTargetDB('mysql','host=localhost;dbname=r3t;port=3306','user','pass'); // target database
 R3T::connectDBs(); // establish PDO connection
 
 $opr = R3T::operator(); // returns OperationManager

@@ -4,25 +4,30 @@ namespace R3T\Database;
 use R3T\Exception\R3TException;
 /**
  * Static PDO wrapper to execute queries easily.
- * @todo [2026.10.07 from:torhc17311@gmail.com to:self] fix how dsn is handled. socket, port, etc.
  */
 abstract class Database{
 	public static \PDO $connection;
+	/**
+	 * dsn prefix
+	 */
 	public static string $driver;
-	public static string $host;
-	public static string $name;
-	public static string $user;
-	public static string $pass;
+	/**
+	 * Rest of the DSN after `static::$driver.':'`
+	 */
+	public static string $dsn;
+	public static string $user = '';
+	public static string $pass = '';
 	public static array $options = [
 		\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
 		\PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
-		\PDO::ATTR_TIMEOUT => 10
+		\PDO::ATTR_TIMEOUT => 10,
+		\PDO::ATTR_EMULATE_PREPARES => false,
 	];
 	public static function connect():void{
 		if(static::$driver === 'sqlite'){
-			$dsn = "sqlite:".static::$host;
+			$dsn = "sqlite:".static::$dsn;
 		}else{
-			$dsn = static::$driver.':host='.static::$host.';dbname='.static::$name;
+			$dsn = static::$driver.':'.static::$dsn;
 		}
 		static::$connection = new \PDO($dsn,static::$user,static::$pass,static::$options);
 		// if(static::$driver === 'sqlite'){
@@ -120,7 +125,7 @@ abstract class Database{
 	}
 	public static function sanitizeSelectColumnsMysql(string $table):array{
 		// @todo not tested yet
-		$raw = static::select("SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='".static::$name."' AND `TABLE_NAME`='".$table."'");
+		$raw = static::select("SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='".$table."'");
 		if($raw === []){
 			throw new R3TException("Table '$table' does not exist in the database.");
 		}
@@ -154,7 +159,7 @@ abstract class Database{
 		return [];
 	}
 	public static function sanitizeSelectTablessMysql():array{
-		// @todo not implemented yet
+		// @todo not implemented/tested yet
 		$raw = static::select("SHOW TABLES");
 		var_dump($raw);
 		$sanitized = [];

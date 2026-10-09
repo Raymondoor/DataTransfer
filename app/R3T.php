@@ -22,46 +22,43 @@ class R3T{
     public static function boot(array $config = []):void{
         self::$config = array_merge(self::$config, $config);
     }
-    public static function setSourceDB(string $driver, string $host, string $name = '', string $user = '', string $pass = '', array $options = []):void{
+    public static function setSourceDB(string $driver, string $dsn, string $user = '', string $pass = '', array $options = []):void{
         SrcDB::$driver = $driver;
-        SrcDB::$host = $host;
-        SrcDB::$name = $name;
+        SrcDB::$dsn = $dsn;
         SrcDB::$user = $user;
         SrcDB::$pass = $pass;
         SrcDB::$options = array_merge(SrcDB::$options, $options);
         self::$isSrcDBSet = true;
     }
-    public static function setOperationalDB(string $driver, string $host, string $name = '', string $user = '', string $pass = '', array $options = []):void{
+    public static function setOperationalDB(string $driver, string $dsn, string $user = '', string $pass = '', array $options = []):void{
         OprDB::$driver = $driver;
-        OprDB::$host = $host;
-        OprDB::$name = $name;
+        OprDB::$dsn = $dsn;
         OprDB::$user = $user;
         OprDB::$pass = $pass;
         OprDB::$options = array_merge(OprDB::$options, $options);
         self::$isOprDBSet = true;
     }
-    public static function setTargetDB(string $driver, string $host, string $name = '', string $user = '', string $pass = '', array $options = []):void{
+    public static function setTargetDB(string $driver, string $dsn, string $user = '', string $pass = '', array $options = []):void{
         TrgtDB::$driver = $driver;
-        TrgtDB::$host = $host;
-        TrgtDB::$name = $name;
+        TrgtDB::$dsn = $dsn;
         TrgtDB::$user = $user;
         TrgtDB::$pass = $pass;
         TrgtDB::$options = array_merge(TrgtDB::$options, $options);
         self::$isTrgtDBSet = true;
     }
-    public static function connectDBs():void{
-        if(!self::$isSrcDBSet){
+    public static function connectDBs(bool $src = true, bool $opr = true, bool $trgt = true):void{
+        if($src && !self::$isSrcDBSet){
             throw new R3TException("Source DB is not set.");
         }
-        if(!self::$isOprDBSet){
+        if($opr && !self::$isOprDBSet){
             throw new R3TException("Operational DB is not set.");
         }
-        if(!self::$isTrgtDBSet){
+        if($trgt && !self::$isTrgtDBSet){
             throw new R3TException("Target DB is not set.");
         }
-        SrcDB::connect();
-        OprDB::connect();
-        TrgtDB::connect();
+        if($src)SrcDB::connect();
+        if($opr)OprDB::connect();
+        if($trgt)TrgtDB::connect();
     }
     /**
      * 
@@ -123,7 +120,7 @@ class R3T{
         return true;
     }
     /**
-     * Execute the transfer apart from settling to new DB. This will create all new intermediate tables, and transfer the data from source to operational DB. Cannot run if there is no prior operation/transfer.
+     * Execute the transfer apart from settling to new DB. This will create all new intermediate tables, and transfer the data from source to operational DB.
      */
     public static function transfer():bool{
         self::createTables(true);
