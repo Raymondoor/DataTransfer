@@ -11,7 +11,7 @@ You can also extend the operation classes to implement custom behavior, however 
 In order for the transfer to work properly, all operations has to be registered to `R3T\Operation\OperationManager`. This can be called by running the `R3T::operator()` method. In the below example we'll assume it was assigned to `$opr`.
 
 ## Magic Operations
-Before talking about the "normal" operations (next section), we need to clear about some operations reserved for doing something special. 
+Before talking about the "normal" operations (next section), we need to clear two operations reserved for doing something special. 
 
 ### CaptureOperation and SettleOperation
 
