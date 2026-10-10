@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 namespace R3T\Operation;
 use R3T\Configuration\TableConfiguration;
+use R3T\Database\OprDB;
+use R3T\Util\DBQueryFormatter;
 abstract class Operation{
     public string $id;
     /**
@@ -23,6 +25,7 @@ abstract class Operation{
      */
     public function setTableConfiguration():void{
         $this->tableConfig = new TableConfiguration($this->id, $this->validateThenGenerateColumns());
+        $this->tableConfig->setDriver(OprDB::$driver);
         $this->tableConfig->setCreate();
         $this->tableConfig->setInsert();
     }
@@ -52,7 +55,7 @@ abstract class Operation{
      * @return string the query string to select data.
      */
     public function selectQueryFromPrevious():string{
-        return 'SELECT * FROM "'.$this->previousOperation->tableConfig->tablename.'"';
+        return 'SELECT * FROM '.DBQueryFormatter::getEncapsulation(OprDB::$driver).$this->previousOperation->tableConfig->tablename.DBQueryFormatter::getEncapsulation(OprDB::$driver);
     }
     /**
      * Result data after transformation. It has to match the format

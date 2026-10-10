@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace R3T\Operation;
 
+use R3T\Database\OprDB;
 use R3T\Exception\R3TException;
 use R3T\Util\DBQueryFormatter;
 /**
@@ -55,8 +56,8 @@ class UnionOperation extends Operation{
         return $this->fromColumns;
     }
     public function selectQueryFromPrevious():string{
-        $fromColumns = DBQueryFormatter::wrapWithDoubleQuotes($this->fromColumns);
-        $unionColumns = DBQueryFormatter::wrapWithDoubleQuotes($this->unionColumns);
+        $fromColumns = DBQueryFormatter::wrapWithEncapsulation($this->fromColumns, DBQueryFormatter::getEncapsulation(OprDB::$driver));
+        $unionColumns = DBQueryFormatter::wrapWithEncapsulation($this->fromColumns, DBQueryFormatter::getEncapsulation(OprDB::$driver));
         return "SELECT ".implode(", ", $fromColumns)." FROM ".$this->previousOperation->tableConfig->tablename." UNION".($this->unionAll ? " ALL" : '')." SELECT ".implode(", ", $unionColumns)." FROM ".$this->unionOperation->tableConfig->tablename;
     }
     public function transform(iterable $data):iterable{

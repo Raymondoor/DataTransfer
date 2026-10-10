@@ -13,17 +13,23 @@ class DBQueryFormatter{
         return $returnArray;
     }
     /**
-     * Wraps each element in an array with double quotes.
+     * Wraps each element in an array with given string.
      * ['foo'] becomes ['"foo"']
      */
-    public static function wrapWithDoubleQuotes(iterable|string $data):iterable{
+    public static function wrapWithEncapsulation(iterable|string $data, string $encapsulation = '"'):iterable{
         if(is_string($data)){
             $data = [$data];
         }
         $returnArray = [];
         foreach($data as $column){
-            $returnArray[] = '"'.$column.'"';
+            $returnArray[] = $encapsulation.$column.$encapsulation;
         }
         return $returnArray;
+    }
+    public static function getEncapsulation(string $driver):string{
+        if($driver === 'mysql'){
+			return '`';
+		}
+		return '"';
     }
 }

@@ -20,6 +20,7 @@ class SettleOperation extends Operation{
      */
     public function setTableConfiguration():void{
         $this->tableConfig = new TableConfiguration($this->table, $this->validateThenGenerateColumns());
+        $this->tableConfig->setDriver(TrgtDB::$driver);
         $this->tableConfig->setInsert();
     }
     public function settle(string $table):self{

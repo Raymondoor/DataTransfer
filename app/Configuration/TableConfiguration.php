@@ -6,14 +6,16 @@ namespace R3T\Configuration;
 class TableConfiguration{
     public CreateTableQueryBuilder $creator;
     public InsertQueryBuilder $inserter;
+    public string $driver;
     public function __construct(
         /**
          * not set by user, but by the system, to identify the table
          */
         public string $tablename,
         public array $columns
-    )
-    {
+    ){}
+    public function setDriver(string $driver):void{
+        $this->driver = $driver;
     }
     public function setCreate():void{
         $this->creator = new CreateTableQueryBuilder($this);

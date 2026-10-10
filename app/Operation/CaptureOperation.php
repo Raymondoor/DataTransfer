@@ -2,6 +2,7 @@
 namespace R3T\Operation;
 
 use R3T\Database\SrcDB;
+use R3T\Util\DBQueryFormatter;
 /**
  * Magic operation to treat source DB as a previous operation. This operation will replicate the source DB table to a new stage ensuring the modification does not happen in source.
  */
@@ -42,7 +43,7 @@ class CaptureOperation extends Operation{
         return $this->tableColumns;
     }
     public function selectQueryFromPrevious():string{
-        return 'SELECT * FROM "'.$this->table.'"';
+        return 'SELECT * FROM '.DBQueryFormatter::getEncapsulation(SrcDB::$driver).$this->table.DBQueryFormatter::getEncapsulation(SrcDB::$driver);
     }
     public function transform(iterable $data):iterable{
         foreach($data as $row){
