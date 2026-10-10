@@ -14,7 +14,7 @@ class DBQueryFormatter{
     }
     /**
      * Wraps each element in an array with given string.
-     * ['foo'] becomes ['"foo"']
+     *  If '"' was given, ['foo'] becomes ['"foo"']
      */
     public static function wrapWithEncapsulation(iterable|string $data, string $encapsulation = '"'):iterable{
         if(is_string($data)){
@@ -31,5 +31,9 @@ class DBQueryFormatter{
 			return '`';
 		}
 		return '"';
+    }
+    public static function wrapWithEncapsulationOnDriver(iterable|string $data, string $driver):iterable{
+        return self::wrapWithEncapsulation($data,self::getEncapsulation($driver));
+
     }
 }

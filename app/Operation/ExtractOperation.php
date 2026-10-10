@@ -27,7 +27,7 @@ class ExtractOperation extends Operation{
         return $this->columns;
     }
     public function selectQueryFromPrevious():string{
-        $columns = DBQueryFormatter::wrapWithEncapsulation($this->columns, DBQueryFormatter::getEncapsulation(SrcDB::$driver));
+        $columns = DBQueryFormatter::wrapWithEncapsulationOnDriver($this->columns, SrcDB::$driver);
         return 'SELECT '.implode(',', $columns).' FROM "'.$this->previousOperation->tableConfig->tablename.'"';
     }
     public function transform(iterable $data):iterable{
